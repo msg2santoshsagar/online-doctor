@@ -1,0 +1,10 @@
+<div class="login-page">
+  <div class="form-container">
+    <form class="login-form" #loginForm="ngForm" (submit)="Login()">
+      <p *ngIf="user.loginError" class="text-danger"><span class="font-weight-bold">Login Failed!!! </span>username or password is wrong</p>
+      <input type="text" placeholder="username" name="userName" [(ngModel)]="user.userName" />
+      <input type="password" placeholder="password" name="password" [(ngModel)]="user.password" />
+      <button type="submit">login</button>
+    </form>
+  </div>
+</div>
