@@ -1,7 +1,9 @@
 .header-container{
     background: #24658E;
 }
-.header-container p{
+.header-text{
+    display: inline-block;
+    margin: 0px;
     padding: 6px;
 }
 .chat-window-container{
@@ -25,4 +27,27 @@
 }
 .row-container{
     margin-bottom: 10px;
+}
+.fa-icon{
+    float: right;
+    margin-top: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+.content-row{
+    min-height: 50px;
+    border-bottom: 1px solid grey;
+    /* margin: auto; */
+}
+.button-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.content-row button{
+    cursor: pointer;
+    color: #78D7E5;
+    background-color: white;
+    border-color:#78D7E5;
+    width: 95%;
 }
