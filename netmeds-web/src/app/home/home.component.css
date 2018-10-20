@@ -26,6 +26,7 @@
 .section-two {
   background: #efe7dd url("./../../assets/images/whatapp-bg.jpg") repeat;
   z-index: 0;
+  overflow: hidden;
 }
 
 .section-three {
@@ -106,6 +107,17 @@
   width: 30px;
 }
 
+.avatar-icon-sm {
+  padding-top: 5px;
+  padding-left: 5px;
+}
+
+.avatar-icon-sm img {
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+}
+
 .sideBar-main {
   padding: 0 !important;
 }
@@ -163,4 +175,107 @@
   padding: 1% !important;
   color: rgba(0, 0, 0, .4);
   vertical-align: baseline;
+}
+
+.message-container {
+  padding-bottom: 10px;
+}
+
+.message-template-1 {
+  font-size: 13px;
+  color: #8c8064;
+  background-color: #ecd197;
+  margin: auto;
+  border-radius: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.text-message {
+  color: black;
+  /* border: 1px solid grey; */
+  background: white;
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-left: -20px;
+  padding: 10px;
+  font-size: 12px;
+}
+
+.text-message-time {
+  text-align-last: end;
+  font-size: 8px;
+}
+
+.message-button-group {
+  position: relative;
+}
+
+.message-button-group button {
+  background-color: white;
+  color: black;
+  border: 1px solid #24658E;
+  border-radius: 20px;
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: 10px;
+}
+
+.chat-window-main-container {
+  overflow: hidden;
+  height: 85%;
+  /* padding-bottom: 50px; */
+}
+
+.chat-messages-container {
+  overflow-y: auto;
+  height: 100%;
+}
+
+
+
+
+.reply {
+  height: 60px;
+  width: 100%;
+  background-color: #f5f1ee;
+  padding: 10px 5px 10px 5px !important;
+  margin: 0 !important;
+  z-index: 1000;
+}
+
+.reply-send {
+  padding: 5px !important;
+}
+
+.reply-send i {
+  text-align: center;
+  padding: 5px !important;
+  color: #93918f;
+  cursor: pointer;
+}
+
+.reply-main {
+  padding: 2px 5px !important;
+}
+
+.reply-main textarea {
+  width: 100%;
+  resize: none;
+  overflow: hidden;
+  padding: 5px !important;
+  outline: none;
+  border: none;
+  text-indent: 5px;
+  box-shadow: none;
+  height: 100%;
+  font-size: 16px;
+  border: 1px solid grey;
+}
+
+.reply-main textarea:focus {
+  outline: none;
+  text-indent: 5px;
+  box-shadow: none;
 }
