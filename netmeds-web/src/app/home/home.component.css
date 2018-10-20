@@ -1,0 +1,28 @@
+.header-container{
+    background: #24658E;
+}
+.header-container p{
+    padding: 6px;
+}
+.chat-window-container{
+    margin: 0px;
+    padding: 5px;
+}
+.color-white{
+    color: white !important;
+}
+.section-one{
+    background-color: white;
+}
+.section-two{
+    background-color: rgb(236, 229, 219);
+}
+.section-three{
+    background-color: white;
+}
+.section{
+   border-left: 1px solid white;
+}
+.row-container{
+    margin-bottom: 10px;
+}
