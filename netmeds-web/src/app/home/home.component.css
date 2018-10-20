@@ -19,6 +19,8 @@
 
 .section-one {
   background-color: white;
+  /* overflow-y: scroll; */
+  overflow: hidden;
 }
 
 .section-two {
@@ -36,6 +38,16 @@
 
 .row-container {
   margin-bottom: 10px;
+}
+
+.profile-container {
+  height: 100%;
+}
+
+.profile-lists {
+  overflow-y: auto;
+  height: 100%;
+  padding-bottom: 100px;
 }
 
 .fa-icon {

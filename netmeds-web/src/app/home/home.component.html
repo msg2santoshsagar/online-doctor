@@ -16,44 +16,42 @@
 
       <div class="content-row profile-container">
 
-        <div class="row sideBar-body" *ngFor="let doctor of doctorList">
-          <div class="col-sm-1 col-xs-1 sideBar-avatar">
-            <div class="avatar-icon">
-              <img src="./../../assets/images/docter_color.png">
-            </div>
-          </div>
-          <div class="col-sm-11 col-xs-11 sideBar-main">
+        <div class="profile-lists">
 
-            <div class="row">
-              <div class="col-sm-8 col-xs-8 sideBar-name">
-                <div class="name-meta">{{doctor}} - Ankit Jain</div>
-              </div>
-              <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
-                <span class="time-meta pull-right">18:18
-                </span>
+          <div class="row sideBar-body" *ngFor="let doctor of doctorList">
+            <div class="col-sm-1 col-xs-1 sideBar-avatar">
+              <div class="avatar-icon">
+                <img src="./../../assets/images/docter_color.png">
               </div>
             </div>
+            <div class="col-sm-11 col-xs-11 sideBar-main">
 
-            <div class="row">
-              <div class="col-sm-12 col-xs-12 sideBar-designation">
-                <span>General Physician</span>
+              <div class="row">
+                <div class="col-sm-8 col-xs-8 sideBar-name">
+                  <div class="name-meta">{{doctor}} - Ankit Jain</div>
+                </div>
+                <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
+                  <span class="time-meta pull-right">18:18
+                  </span>
+                </div>
               </div>
-            </div>
 
-            <div class="row">
-              <div class="col-sm-12 col-xs-12 sideBar-message">
-                <div>This is chat message between doctor and patient. You need to check this and do blah blah</div>
+              <div class="row">
+                <div class="col-sm-12 col-xs-12 sideBar-designation">
+                  <span>General Physician</span>
+                </div>
               </div>
-            </div>
 
+              <div class="row">
+                <div class="col-sm-12 col-xs-12 sideBar-message">
+                  <div>This is chat message between doctor and patient. You need to check this and do blah blah</div>
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
-
-
       </div>
-
-
-
     </div>
     <!--Section one :: END-->
 
