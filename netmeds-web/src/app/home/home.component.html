@@ -11,7 +11,7 @@
 
 
       <div class="content-row button-container">
-        <button>START A NEW CONSULTATION</button>
+        <button (click)="StartANewConsultation()">START A NEW CONSULTATION</button>
       </div>
 
       <div class="content-row profile-container">
@@ -28,7 +28,7 @@
 
               <div class="row">
                 <div class="col-sm-8 col-xs-8 sideBar-name">
-                  <div class="name-meta">{{doctor}} - Ankit Jain</div>
+                  <div class="name-meta">Ankit Jain</div>
                 </div>
                 <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
                   <span class="time-meta pull-right">18:18
@@ -80,7 +80,7 @@
       <div class="chat-window-main-container">
         <div class="chat-messages-container">
 
-          <div class="row m-0 message-container" *ngFor="let d of doctorList">
+          <div class="row m-0 message-container" *ngFor="let message of currentActiveMessageList">
 
             <div class="message-template-1" *ngIf="false">
               <p class="m-0">Your chat consultation details will remain confendintial.</p>
@@ -225,7 +225,7 @@
                   <div class="text-message">
                     <p>Describe symptomps {{d}}</p>
                     <div class="message-input-group">
-                      <textarea type="text" class="" placeholder="symptomps" ></textarea>
+                      <textarea type="text" class="" placeholder="symptomps"></textarea>
                       <button>SUBMIT</button>
                     </div>
                     <p class="text-message-time m-0">10:41 pm</p>
@@ -248,7 +248,7 @@
       </div>
 
       <!-- Reply Box -->
-      <div class="row reply" >
+      <div class="row reply" *ngIf="showReplyBox">
         <div class="col-sm-11 col-xs-11 reply-main">
           <textarea class="form-control" rows="1" id="comment" placeholder="Enter your message here"></textarea>
         </div>

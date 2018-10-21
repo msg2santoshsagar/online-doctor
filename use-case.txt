@@ -1,0 +1,25 @@
+· Action 1: User can view 3 distinctive sections(refer attachment) on the landing page - chat details, main
+chat window, last logins details
+· Action 2: A predefined bot (Dr's assistant) responds to patient with a greeting(chat window), user can
+see current chat details-latest message(chat details section),last login details section remains empty.
+· Action 3: Chat-bot asks patient to input a set of 4 questions within the chat itself (See images below).
+· Action 4: a horizontally scrollbar should appear showing doctors detail (cards), clicking which should
+open a modal with respective doctor's profile with a back button.
+· Action 5: Once the questions are completed a payment popup opens within the chat window which gives
+user option to choose one time consultation or unlimited consultations for 3 months (You may add some
+dummy price and discounts for both).
+· Action 6: After clicking the pop up user can views the chat window in the same state as before (chat
+records maintained) plus, previous chats populated in the chat details section and last login details
+populated in the last login details section.
+Additional instructions:
+· Chat input bar's visibility should toggle depending upon questions (no bar for click and select options,
+visible and available for input otherwise)
+· questions and answers popping up on screen should be highly interactive and materialistic. Questions
+from doctor should be realistic, eg: questions should not be very prompt but a bit delayed with a dot-loader.
+· You may or may not save doctor profiles in database and may very much hard code in your script.
+
+Questions:
+· Name
+· Speciality (General Physician, Gynaecologist, Paediatrician, cardiologist)
+· Symptoms
+· Upload files
