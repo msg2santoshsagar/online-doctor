@@ -222,6 +222,28 @@
   margin-left: 10px;
 }
 
+.message-input-group input,
+select {
+  border: 1px solid #24658E;
+  border-radius: 5px;
+}
+
+.message-input-group textarea {
+  resize: none;
+  overflow: hidden;
+  border: 1px solid #24658E;
+  border-radius: 5px;
+}
+
+.message-input-group button {
+  background-color: white;
+  color: black;
+  border: 1px solid #24658E;
+  border-radius: 20px;
+  padding: 5px;
+  margin-left: 5px;
+}
+
 .chat-window-main-container {
   overflow: hidden;
   height: 85%;
