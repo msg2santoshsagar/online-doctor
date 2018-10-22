@@ -25,21 +25,8 @@ export class LoginComponent implements OnInit {
   constructor(private router: Router, private http: HttpClient, private authService: AuthService) { }
 
   ngOnInit() {
-    this.FindCurrentUser();
   }
 
-  FindCurrentUser() {
-    this.http.get(environment.CURRENT_USER_END_POINT, this.httpOptions).subscribe(
-      (res: any) => {
-        console.log("current user response :: ", res);
-        if (res != null && res.userName != null) {
-          this.authService.doLogin(res.userName);
-        }
-      }, (err: any) => {
-        console.log("current user error :: ", err);
-      }
-    )
-  }
 
   Login() {
     console.log("Request to login : ", this.user);

@@ -26,6 +26,19 @@ export class AuthService {
     }
   }
 
+  FindCurrentUser() {
+    this.http.get(environment.CURRENT_USER_END_POINT, this.httpOptions).subscribe(
+      (res: any) => {
+        console.log("current user response :: ", res);
+        if (res != null && res.userName != null) {
+          this.doLogin(res.userName);
+        }
+      }, (err: any) => {
+        console.log("current user error :: ", err);
+      }
+    )
+  }
+
   doLogin(userName: string) {
     sessionStorage.setItem('loggedIn', "true");
     sessionStorage.setItem('userName', userName);

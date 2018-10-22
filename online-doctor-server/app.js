@@ -9,6 +9,7 @@ var wss = require('./node/websocket_server');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var messageRouter = require('./routes/messages');
 
 
 var app = express();
@@ -60,6 +61,7 @@ wss.initSessionStore(sessionStore);
 
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/messages', messageRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

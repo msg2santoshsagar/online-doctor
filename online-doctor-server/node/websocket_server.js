@@ -1,4 +1,6 @@
 var WebSocket = require('ws');
+var messageService = require('./message.service');
+var userDetail = require('./user-detail');
 
 var clients = {}; //To keep the detail of users
 
@@ -9,10 +11,38 @@ function initSessionStore(store) {
 }
 
 
-var init = function (server) {
+function messageHandler(identity, message) {
+    var messageJson = JSON.parse(message);
+    var task = messageJson.task;
+
+    switch (task) {
+
+        case 'START_NEW_CONSULTATION':
+            handleNewConsultation(identity, message);
+            break;
+        default:
+            console.log("No handler defined for ", task);
+
+    }
+
+}
+
+function handleNewConsultation(identity, messageJson) {
+    console.log("handleNewConsultation :: Input :: ", messageJson);
+    messageService.newConsultationForUser(identity)
+    sendMessage(identity, {
+        task: 'NEW_MESSAGE_AVAILABLE',
+        from: userDetail.DR_ASSISTANT_NAME
+    })
+}
+
+
+function init(server) {
 
     var _this = this;
-    var wss = new WebSocket.Server({ server });
+    var wss = new WebSocket.Server({
+        server
+    });
 
     wss.on('connection', function connection(ws, request) {
 
@@ -57,8 +87,9 @@ var init = function (server) {
 
         ws.on('message', function incoming(message) {
             // console.log("Client  :: ", ws);
-            console.log("message received :: ", message);
-            ws.send("Your message received as " + message);
+            //console.log("message received :: ", message);
+            //ws.send("Your message received as " + message);
+            messageHandler(ws.appSessionId, message);
         });
 
         ws.on('close', function closed(code, reason) {
