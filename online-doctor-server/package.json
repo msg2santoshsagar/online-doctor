@@ -1,0 +1,21 @@
+{
+  "name": "online-doctor-server",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "SET DEBUG=online-doctor-server:* & npm run startServer",
+    "startServer": "node ./bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.3",
+    "cors": "^2.8.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "express-session": "^1.15.6",
+    "http-errors": "~1.6.2",
+    "morgan": "~1.9.0",
+    "pug": "2.0.0-beta11",
+    "sessionstore": "^1.3.3",
+    "ws": "^6.1.0"
+  }
+}
