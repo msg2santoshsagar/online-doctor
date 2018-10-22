@@ -13,8 +13,9 @@ import { environment } from 'src/environments/environment';
 export class HomeComponent implements OnInit, OnDestroy {
 
   doctorList: any = []; // Doctor list
-  messageList: any = {}; // Map of doctor and message
+  globalMessages: any = {}; // Map of doctor and message
   currentActiveMessageList: any = []; // Current Acitve message list
+  currentActiveDoctorName: string = ''; // Current Acitve message list
 
 
   showReplyBox: boolean = false;
@@ -51,15 +52,36 @@ export class HomeComponent implements OnInit, OnDestroy {
       (res: any) => {
         console.log("Message list found :: ", res);
         if (res == null) {
-          this.messageList = {};
+          this.globalMessages = {};
         } else {
-          this.messageList = {};
+          this.globalMessages = res;
+          this.prepareMessageList();
         }
 
       }, (err: any) => {
         console.log("Error occured while finding message list for user");
       }
     )
+  }
+
+  prepareMessageList() {
+    var localDoctorList = [];
+    var doctorNames = Object.keys(this.globalMessages);
+    for (var i = 0; i < doctorNames.length; i++) {
+      var doctorName = doctorNames[i];
+      var doctorDetail = {
+        name: doctorName,
+        designation: this.globalMessages[doctorName].designation,
+        shortMessage: this.globalMessages[doctorName]['messages'][this.globalMessages[doctorName].messageId - 1].shortMessage,
+        time: this.globalMessages[doctorName]['messages'][this.globalMessages[doctorName].messageId - 1].time
+      }
+      localDoctorList.push(doctorDetail);
+    }
+    this.doctorList = localDoctorList;
+    if (this.doctorList.length > 0) {
+      this.currentActiveDoctorName = this.doctorList[0].name;
+      this.currentActiveMessageList = this.globalMessages[this.currentActiveDoctorName].messages;
+    }
   }
 
   StartANewConsultation() {

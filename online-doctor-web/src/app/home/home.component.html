@@ -20,7 +20,7 @@
 
         <div class="profile-lists">
 
-          <div class="row sideBar-body" *ngFor="let doctor of doctorList">
+          <div class="row sideBar-body" *ngFor="let doctor of doctorList" [ngClass]="{activeDoctor: doctor.name == currentActiveDoctorName  }">
             <div class="col-sm-1 col-xs-1 sideBar-avatar">
               <div class="avatar-icon">
                 <img src="./../../assets/images/docter_color.png">
@@ -30,23 +30,23 @@
 
               <div class="row">
                 <div class="col-sm-8 col-xs-8 sideBar-name">
-                  <div class="name-meta">Ankit Jain</div>
+                  <div class="name-meta">{{doctor.name}}</div>
                 </div>
                 <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
-                  <span class="time-meta pull-right">18:18
+                  <span class="time-meta pull-right">{{doctor.time | chatTimeIndicator}}
                   </span>
                 </div>
               </div>
 
               <div class="row">
                 <div class="col-sm-12 col-xs-12 sideBar-designation">
-                  <span>General Physician</span>
+                  <span>{{doctor.designation}}</span>
                 </div>
               </div>
 
               <div class="row">
                 <div class="col-sm-12 col-xs-12 sideBar-message">
-                  <div>This is chat message between doctor and patient. You need to check this and do blah blah</div>
+                  <div>{{doctor.shortMessage}}</div>
                 </div>
               </div>
 
@@ -69,7 +69,7 @@
             </div>
           </div>
           <div class="col-md-10 p-0">
-            <p class="header-text">Dr. Assistant</p>
+            <p class="header-text">{{currentActiveDoctorName}}</p>
           </div>
           <div class="col-md-1 pull-right">
             <i class="fa fa-ellipsis-v fa-icon" aria-hidden="true"></i>
@@ -84,8 +84,32 @@
 
           <div class="row m-0 message-container" *ngFor="let message of currentActiveMessageList">
 
-            <div class="message-template-1" *ngIf="false">
+            <div class="message-template-1" *ngIf=" message.template == 'TEMPLATE_1' ">
               <p class="m-0">Your chat consultation details will remain confendintial.</p>
+            </div>
+
+            <div class="col-md-12 p-0" *ngIf=" message.template == 'TEMPLATE_2' ">
+              <div class="row m-0">
+                <div class="col-md-6">
+                  <p class="d-none">To take some space</p>
+                </div>
+                <div class="col-md-5 p-0">
+                  <div class="text-message">
+                    <p>select one option {{d}}</p>
+                    <div class="message-button-group">
+                      <button>My self</button>
+                      <button>Some One else</button>
+                    </div>
+                    <p class="text-message-time m-0">10:41 pm</p>
+                  </div>
+                </div>
+
+                <div class="col-sm-1 col-xs-1 p-0">
+                  <div class="avatar-icon-sm">
+                    <img src="./../../assets/images/docter_color.png">
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="col-md-12 p-0" *ngIf="false">
@@ -126,30 +150,6 @@
                     Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including
                     versions of Lorem Ipsum.
                     <br />
-                    <p class="text-message-time m-0">10:41 pm</p>
-                  </div>
-                </div>
-
-                <div class="col-sm-1 col-xs-1 p-0">
-                  <div class="avatar-icon-sm">
-                    <img src="./../../assets/images/docter_color.png">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-12 p-0" *ngIf="false">
-              <div class="row m-0">
-                <div class="col-md-6">
-                  <p class="d-none">To take some space</p>
-                </div>
-                <div class="col-md-5 p-0">
-                  <div class="text-message">
-                    <p>select one option {{d}}</p>
-                    <div class="message-button-group">
-                      <button>My self</button>
-                      <button>Some One else</button>
-                    </div>
                     <p class="text-message-time m-0">10:41 pm</p>
                   </div>
                 </div>
@@ -218,7 +218,7 @@
             </div>
 
 
-            <div class="col-md-12 p-0">
+            <div class="col-md-12 p-0" *ngIf="false">
               <div class="row m-0">
                 <div class="col-md-6">
                   <p class="d-none">To take some space</p>

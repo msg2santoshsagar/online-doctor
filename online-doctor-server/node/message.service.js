@@ -9,6 +9,16 @@ function getMessagesForUser(userName) {
     return globalMessages[userName];
 }
 
+function findDesignation(doctorName) {
+    var doctors = userDetail.Doctors;
+    for (var i = 0; i < doctors.length; i++) {
+        if (doctors[i].name == doctorName) {
+            return doctors[i].designation;
+        }
+    }
+    return "Not Available";
+}
+
 function newConsultationForUser(userName) {
 
     console.log("New consultation req for user ", userName);
@@ -24,7 +34,8 @@ function newConsultationForUser(userName) {
     if (prevMessage == null) {
         prevMessage = {
             messageId: 0,
-            messages: []
+            messages: [],
+            designation: findDesignation(from)
         };
     }
 
@@ -32,10 +43,25 @@ function newConsultationForUser(userName) {
     var message = {
         id: newMessageId,
         template: template.TEMPLATE_1,
-        time: new Date()
+        time: new Date(),
+        userSent: false,
+        shortMessage: 'Your detail is safe'
+    }
+
+    newMessageId = newMessageId + 1;
+
+    var message_input = {
+        id: newMessageId,
+        template: template.TEMPLATE_2,
+        time: new Date(),
+        userSent: false,
+        shortMessage: 'Please select the answer'
     }
 
     prevMessage.messages.push(message);
+    prevMessage.messages.push(message_input);
+
+    prevMessage.messageId = newMessageId;
 
     globalMessages[userName][from] = prevMessage;
 }
