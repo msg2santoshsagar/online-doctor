@@ -9,6 +9,37 @@ function getMessagesForUser(userName) {
     return globalMessages[userName];
 }
 
+function getMessageForUserByDoctor(userName, reqBody) {
+
+    var lastMessageId = 0;
+    var forUserName = reqBody.forUserName;
+
+    if (reqBody.lastMessageId != null) {
+        lastMessageId = reqBody.lastMessageId;
+    }
+
+    console.log("last message id from client :: ", lastMessageId);
+
+    if (lastMessageId == 0) {
+        return globalMessages[userName][forUserName];
+    }
+
+    var messageList = [];
+
+    var temp = globalMessages[userName][forUserName].messages;
+
+    //console.log("Temps :: -- ", temp);
+
+    for (var i = 0; i < temp.length; i++) {
+        if (temp[i].id > lastMessageId) {
+            messageList.push(temp[i]);
+        }
+    }
+
+    return messageList;
+
+}
+
 function findDesignation(doctorName) {
     var doctors = userDetail.Doctors;
     for (var i = 0; i < doctors.length; i++) {
@@ -68,5 +99,6 @@ function newConsultationForUser(userName) {
 
 module.exports = {
     getMessagesForUser: getMessagesForUser,
+    getMessageForUserByDoctor: getMessageForUserByDoctor,
     newConsultationForUser: newConsultationForUser
 }

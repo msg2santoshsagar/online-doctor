@@ -9,7 +9,8 @@ export const environment = {
   CURRENT_USER_END_POINT: BASE_URL + "/api/users/currentUser",
   LOGIN_END_POINT: BASE_URL + "/api/users/login",
   LOGOUT_END_POINT: BASE_URL + "/api/users/logout",
-  MESSAGE_LIST_END_POINT:BASE_URL+"/api/messages/messageList"
+  MESSAGE_LIST_END_POINT: BASE_URL + "/api/messages/messageList",
+  MESSAGE_LIST_BY_USER_END_POINT: BASE_URL + "/api/messages/messageListByUser"
 };
 
 /*
