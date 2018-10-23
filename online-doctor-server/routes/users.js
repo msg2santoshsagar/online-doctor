@@ -1,5 +1,6 @@
 var express = require('express');
 var wss = require('./../node/websocket_server');
+var userDetail = require('./../node/user-detail');
 
 var router = express.Router();
 
@@ -13,6 +14,14 @@ router.post('/login', function (req, res, next) {
     res.send({
       status: 'failed',
       message: "user name can't be blank"
+    });
+    return;
+  }
+
+  if (userName.trim() == userDetail.DR_ASSISTANT_NAME) {
+    res.send({
+      status: 'failed',
+      message: "I have never seen any bot logging in"
     });
     return;
   }
@@ -34,7 +43,7 @@ router.post('/login', function (req, res, next) {
   }
 
   req.session.appData = {
-    id: userName,
+    id: userName.trim(),
     userName: userName
   };
 
