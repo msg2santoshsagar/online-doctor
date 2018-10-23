@@ -342,3 +342,7 @@ select {
   cursor: not-allowed;
   background-color: rgb(75, 255, 75) !important;
 }
+
+.whitespace-preline {
+  white-space: pre-line;
+}

@@ -8,13 +8,17 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { ChatTimeIndicatorPipe } from './pipes/chat-time-indicator.pipe';
+import { NewlineHtmlPipe } from './pipes/newline-html.pipe';
+import { ProfilePicPipe } from './pipes/profile-pic.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     LoginComponent,
-    ChatTimeIndicatorPipe
+    ChatTimeIndicatorPipe,
+    NewlineHtmlPipe,
+    ProfilePicPipe
   ],
   imports: [
     BrowserModule,
