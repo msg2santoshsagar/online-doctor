@@ -281,6 +281,8 @@ select {
   padding: 10px 5px 10px 5px !important;
   margin: 0 !important;
   z-index: 1000;
+  position: absolute;
+  bottom: 0;
 }
 
 .reply-send {

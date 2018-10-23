@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   currentActiveMessageList: any = []; // Current Acitve message list
   currentActiveDoctorName: string = 'Start New consultation'; // Current Acitve message list
 
-  showReplyBox: boolean = true;
+  showReplyBox: boolean = false;
   DR_ASSISTANT_NAME: string = 'Dr. Assistant';
 
   httpOptions = {

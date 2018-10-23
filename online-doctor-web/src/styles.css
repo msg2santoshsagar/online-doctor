@@ -9,10 +9,12 @@ body {
   height: 100%;
 }
 
-.dummy-container {
+.dummy-container-red {
   border: 1px solid red;
-  min-height: 40px;
-  width: 100%;
+}
+
+.dummy-container-green {
+  border: 1px solid green;
 }
 
 ::-webkit-scrollbar {

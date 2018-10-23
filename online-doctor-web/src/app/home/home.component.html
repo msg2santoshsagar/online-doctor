@@ -84,9 +84,10 @@
 
 
       <div class="chat-window-main-container">
+
         <div class="chat-messages-container" #chatMessageContainer (scroll)="onScroll()">
 
-          <div class="row m-0 message-container" *ngFor="let message of currentActiveMessageList">
+          <div class="row m-0 message-container " *ngFor="let message of currentActiveMessageList">
 
             <div class="message-template-1" *ngIf=" message.template == 'TEMPLATE_1' ">
               <p class="m-0">Your chat consultation details will remain confendintial.</p>
@@ -240,20 +241,25 @@
 
 
           </div>
-        </div>
-      </div>
 
-      <!-- Reply Box -->
-      <div class="row reply" *ngIf="showReplyBox">
-        <div class="col-sm-11 col-xs-11 reply-main">
-          <textarea class="form-control" rows="1" id="comment" [(ngModel)]="replyMessage" placeholder="Enter your message here"
-            (keyup)="UserTypingMessage()" (keyup.enter)="OnSendReply($event)"></textarea>
+        </div><!-- chat message main container :: END -->
+
+        <!-- Reply Box -->
+        <div class="row reply" *ngIf="showReplyBox">
+          <div class="col-sm-11 col-xs-11 reply-main">
+            <textarea class="form-control" rows="1" id="comment" [(ngModel)]="replyMessage" placeholder="Enter your message here"
+              (keyup)="UserTypingMessage()" (keyup.enter)="OnSendReply($event)"></textarea>
+          </div>
+          <div class="col-sm-1 col-xs-1 reply-send">
+            <i class="fa fa-send fa-2x" aria-hidden="true" (click)="OnSendReply($event)"></i>
+          </div>
         </div>
-        <div class="col-sm-1 col-xs-1 reply-send">
-          <i class="fa fa-send fa-2x" aria-hidden="true" (click)="OnSendReply($event)"></i>
-        </div>
-      </div>
-      <!-- Reply Box End -->
+        <!-- Reply Box End -->
+
+
+      </div> <!-- chat windeow main container :: END -->
+
+
 
 
 
