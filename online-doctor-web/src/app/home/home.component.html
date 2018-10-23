@@ -148,7 +148,7 @@
                 </div>
                 <div class="col-md-5 p-0">
                   <div class="text-message">
-                    <p>Describe symptomps {{d}}</p>
+                    <p>Describe symptomps</p>
                     <div class="message-input-group">
                       <textarea type="text" class="" placeholder="symptomps" [(ngModel)]="message.answer" [readonly]="message.oldMessage"></textarea>
                       <button (click)="!message.oldMessage && OnAnswerSelected(message)">SUBMIT</button>
@@ -201,7 +201,7 @@
                   <p class="d-none">To take some space</p>
                 </div>
                 <div class="col-md-9 p-0">
-                  <div class="text-message whitespace-preline">{{message.actMessage}}
+                  <div class="text-message whitespace-preline">{{message.actMessage | newlineHtml}}
                     <br />
                     <p class="text-message-time m-0">{{message.time | chatTimeIndicator}}</p>
                   </div>
@@ -226,7 +226,7 @@
                 </div>
 
                 <div class="col-md-9 p-0">
-                  <div class="text-message whitespace-preline">{{message.actMessage}}
+                  <div class="text-message whitespace-preline">{{message.actMessage | newlineHtml}}
                     <br />
                     <p class="text-message-time m-0">{{message.time | chatTimeIndicator}}</p>
                   </div>
@@ -247,7 +247,7 @@
             (keyup.enter)="OnSendReply($event)"></textarea>
         </div>
         <div class="col-sm-1 col-xs-1 reply-send">
-          <i class="fa fa-send fa-2x" aria-hidden="true"></i>
+          <i class="fa fa-send fa-2x" aria-hidden="true" (click)="OnSendReply($event)"></i>
         </div>
       </div>
       <!-- Reply Box End -->
