@@ -64,6 +64,10 @@ function findRandomDocByDesignation(designation) {
 
     var idx = Math.floor(Math.random() * len);
 
+    if (idx >= len) {
+        idx = 0;
+    }
+
     return dlist[idx].name;
 }
 
