@@ -17,11 +17,11 @@ export class AuthService {
   };
 
   constructor(private http: HttpClient, private router: Router) {
-    var loggedIn = sessionStorage.getItem('loggedIn');
+    var loggedIn = localStorage.getItem('loggedIn');
     if (loggedIn != null) {
       this._userLoggedIn = loggedIn == 'true' ? true : false;
     }
-    var userName = sessionStorage.getItem('userName');
+    var userName = localStorage.getItem('userName');
     if (userName != null) {
       this._userName = userName;
     }
@@ -34,7 +34,7 @@ export class AuthService {
         if (res != null && res.userName != null) {
           this.doLogin(res.userName);
         } else {
-          this.doLogOut();
+          this.doLogOut(true);
         }
       }, (err: any) => {
         console.log("current user error :: ", err);
@@ -43,8 +43,8 @@ export class AuthService {
   }
 
   doLogin(userName: string) {
-    sessionStorage.setItem('loggedIn', "true");
-    sessionStorage.setItem('userName', userName);
+    localStorage.setItem('loggedIn', "true");
+    localStorage.setItem('userName', userName);
     this._userLoggedIn = true;
     this._userName = userName;
   }
@@ -52,7 +52,7 @@ export class AuthService {
   doLogOut(redirectToLogin?: boolean) {
     console.log("Doing logout");
     this.http.get(environment.LOGOUT_END_POINT, this.httpOptions).subscribe();
-    sessionStorage.clear();
+    localStorage.clear();
     this._userLoggedIn = false;
     this._userName = null;
     if (redirectToLogin == true) {

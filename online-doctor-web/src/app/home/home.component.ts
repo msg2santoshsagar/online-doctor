@@ -136,11 +136,23 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  setUserTypingMessage(user) {
+    if (this.globalMessages[user] != null && this.globalMessages[user] != undefined) {
+      this.globalMessages[user].typing = true;
+      var that = this;
+      setTimeout(function () {
+        that.globalMessages[user].typing = false;
+      }, 1000);
+    }
+  }
+
   messageHandler(messageJson) {
     let task = messageJson.task;
 
     switch (task) {
       case 'NEW_MESSAGE_AVAILABLE': this.fetchNewMessageForUser(messageJson.from);
+        break;
+      case 'USER_TYPING_MESSAGE': this.setUserTypingMessage(messageJson.who);
         break;
       default: console.log("Implementation for task not available :: ", task);
         break;
@@ -195,6 +207,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.webSocketService.sendMessage({
       task: 'START_NEW_CONSULTATION'
     });
+    this.OnSelectDoctor({ name: this.DR_ASSISTANT_NAME });
   }
 
   logOut() {
@@ -264,6 +277,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.currentActiveDoctorName == doctor.name) {
       return;
     }
+    if (this.globalMessages[doctor.name] == null || this.globalMessages[doctor.name] == undefined) {
+      console.log("Detail for doctor not available");
+      return;
+    }
     this.currentActiveDoctorName = doctor.name;
     this.currentActiveMessageList = this.globalMessages[doctor.name].messages;
     this.showReplyBox = false;
@@ -294,6 +311,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
     this.globalMessages[this.currentActiveDoctorName].messageId = this.globalMessages[this.currentActiveDoctorName].messageId + 1;
     this.updateShortMessageAndTime(this.currentActiveDoctorName);
+  }
+
+  UserTypingMessage() {
+    console.log("User typing message");
+    this.webSocketService.sendMessage({
+      task: 'USER_TYPING_MESSAGE',
+      to: this.currentActiveDoctorName,
+      from: this.authService.getUsername()
+    });
   }
 
 }

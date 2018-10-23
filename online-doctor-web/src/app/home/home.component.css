@@ -346,3 +346,10 @@ select {
 .whitespace-preline {
   white-space: pre-line;
 }
+
+.text-small-typing{
+  font-size: 10px;
+  font-style: italic;
+  color: #3dea44;
+  letter-spacing: 1px;
+}
