@@ -70,6 +70,18 @@
   align-items: center;
 }
 
+.button-container button{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.overflow-el{
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .content-row button {
   cursor: pointer;
   color: #78D7E5;
