@@ -224,6 +224,7 @@ function answerSelected(userName, reqBody) {
         }
 
         if (record.template == template.TEMPLATE_5) {
+            // Final One.. Assign a doctor now
 
             var docName = findRandomDocByDesignation(answer);
 
@@ -280,6 +281,70 @@ function answerSelected(userName, reqBody) {
             prevMessage.messages.push(message_input);
 
             prevMessage.messageId = newMessageId;
+
+
+            //Prepare the message for doctor
+            prevMessage = globalMessages[userName][userDetail.DR_ASSISTANT_NAME];
+            messageId = prevMessage.messageId;
+
+            console.log("New message id ::: now will find the detail :: ", messageId);
+
+            var patientDetail = [];
+            patientDetail[0] = "Hello " + docName + ", Please attend the below patient.";
+            patientDetail[2] = "Name : " + userName;
+            for (var i = messageId - 1; i >= 0; i--) {
+                var tmpMsg = prevMessage.messages[i];
+                // console.log("TEMPLATE : ", tmpMsg.template);
+                if (tmpMsg.template == template.TEMPLATE_4) {
+                    patientDetail[3] = "Symptomps : " + tmpMsg.answer;
+                }
+                if (tmpMsg.template == template.TEMPLATE_3) {
+                    patientDetail[2] = "For : " + tmpMsg.answer;
+                }
+                if (tmpMsg.template == template.TEMPLATE_2) {
+                    patientDetail[1] = "For : " + tmpMsg.answer;
+                    break;
+                }
+            }
+
+            patientDetail = patientDetail.join("\n");
+            //console.log("Patient detail :: ",patientDetail);
+
+            // Prepare message for doctor 
+            if (globalMessages[docName] == null || globalMessages[docName] == undefined) {
+                globalMessages[docName] = {};
+            }
+            if (globalMessages[docName][userName] == null || globalMessages[docName][userName] == undefined) {
+                globalMessages[docName][userName] = {
+                    messageId: 0,
+                    messages: [],
+                    designation: findDesignation(userName)
+                };
+                var infoMessage = {
+                    id: globalMessages[docName][userName].messageId + 1,
+                    template: template.TEMPLATE_1,
+                    time: new Date(),
+                    userSent: false,
+                    shortMessage: 'Your detail is safe'
+                }
+                globalMessages[docName][userName].messages.push(infoMessage);
+                globalMessages[docName][userName].messageId = globalMessages[docName][userName].messageId + 1;
+
+            }
+            prevMessage = globalMessages[docName][userName];
+
+            var tMsg = {
+                id: prevMessage.messageId + 1,
+                template: template.TEMPLATE_6,
+                time: new Date(),
+                userSent: false,
+                shortMessage: patientDetail,
+                actMessage: patientDetail
+            }
+
+            prevMessage.messages.push(tMsg);
+            prevMessage.messageId = prevMessage.messageId + 1;
+
 
         }
 

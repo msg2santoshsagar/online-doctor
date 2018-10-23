@@ -57,6 +57,10 @@ router.post('/answerSelected', function (req, res, next) {
                 task: 'NEW_MESSAGE_AVAILABLE',
                 from: messages.docName
             });
+            wss.sendMessage(messages.docName, {
+                task: 'NEW_MESSAGE_AVAILABLE',
+                from: userName
+            });
             delete messages.docName;
         }
 
