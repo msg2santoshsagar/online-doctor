@@ -42,7 +42,7 @@
 }
 
 .profile-container {
-  height: 100%;
+  height: calc(100% - 86px);
 }
 
 .profile-lists {
@@ -70,13 +70,13 @@
   align-items: center;
 }
 
-.button-container button{
+.button-container button {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
 
-.overflow-el{
+.overflow-el {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -265,8 +265,12 @@ select {
 
 .chat-window-main-container {
   overflow: hidden;
-  height: 85%;
+  height: calc(100% - 80px);
   /* padding-bottom: 50px; */
+}
+
+.chat-window-main-container-no-replybox {
+  height: calc(100% - 35px);
 }
 
 .chat-messages-container {
@@ -275,7 +279,7 @@ select {
 }
 
 .reply {
-  height: 60px;
+  height: 50px;
   width: 100%;
   background-color: #f5f1ee;
   padding: 10px 5px 10px 5px !important;
@@ -286,14 +290,16 @@ select {
 }
 
 .reply-send {
-  padding: 5px !important;
+  padding: 0px !important;
 }
 
 .reply-send i {
   text-align: center;
-  padding: 5px !important;
+  padding: 0px !important;
   color: #93918f;
   cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
 }
 
 .reply-main {
@@ -310,7 +316,7 @@ select {
   text-indent: 5px;
   box-shadow: none;
   height: 100%;
-  font-size: 16px;
+  font-size: 12px;
   border: 1px solid grey;
 }
 
@@ -361,7 +367,7 @@ select {
   white-space: pre-line;
 }
 
-.text-small-typing{
+.text-small-typing {
   font-size: 10px;
   font-style: italic;
   color: #3dea44;

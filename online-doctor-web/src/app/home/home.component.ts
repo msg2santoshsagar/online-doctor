@@ -294,6 +294,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     e.preventDefault();
     let userMessage = this.replyMessage;
     this.replyMessage = '';
+
+    if (userMessage == null || userMessage == undefined || userMessage.trim() == '') {
+      return;
+    }
+
+
     this.webSocketService.sendMessage({
       task: 'TEXT_MESSAGE',
       from: this.authService.getUsername(),

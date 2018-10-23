@@ -83,7 +83,7 @@
       <!-- header container : end-->
 
 
-      <div class="chat-window-main-container">
+      <div class="chat-window-main-container" [ngClass]="{'chat-window-main-container-no-replybox': !showReplyBox}">
 
         <div class="chat-messages-container" #chatMessageContainer (scroll)="onScroll()">
 
