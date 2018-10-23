@@ -52,6 +52,8 @@ function findDesignation(doctorName) {
 
 function findRandomDocByDesignation(designation) {
 
+    console.log("Find random doc by designation");
+
     var doctors = userDetail.Doctors;
     var dlist = [];
     for (var i = 0; i < doctors.length; i++) {
@@ -60,13 +62,19 @@ function findRandomDocByDesignation(designation) {
         }
     }
 
+    //console.log("Found doctors for designation  ", designation, " and list : ", dlist);
+
     var len = dlist.length;
 
     var idx = Math.floor(Math.random() * len);
 
+    console.log(" ranom idx calculated as : ", idx);
+
     if (idx >= len) {
         idx = 0;
     }
+
+    console.log("idx calculated as : ", idx);
 
     return dlist[idx].name;
 }
@@ -89,6 +97,15 @@ function newConsultationForUser(userName) {
             messages: [],
             designation: findDesignation(from)
         };
+        var message = {
+            id: prevMessage.messageId + 1,
+            template: template.TEMPLATE_1,
+            time: new Date(),
+            userSent: false,
+            shortMessage: 'Your detail is safe'
+        }
+        prevMessage.messages.push(message);
+        prevMessage.messageId = prevMessage.messageId + 1;
     } else {
 
         var localMessageList = prevMessage.messages;
@@ -101,19 +118,9 @@ function newConsultationForUser(userName) {
             localMessage.oldMessage = true;
         }
 
-
     }
 
     var newMessageId = prevMessage.messageId + 1;
-    var message = {
-        id: newMessageId,
-        template: template.TEMPLATE_1,
-        time: new Date(),
-        userSent: false,
-        shortMessage: 'Your detail is safe'
-    }
-
-    newMessageId = newMessageId + 1;
 
     var message_input = {
         id: newMessageId,
@@ -123,7 +130,7 @@ function newConsultationForUser(userName) {
         shortMessage: 'Please select the answer'
     }
 
-    prevMessage.messages.push(message);
+
     prevMessage.messages.push(message_input);
 
     prevMessage.messageId = newMessageId;
@@ -231,6 +238,47 @@ function answerSelected(userName, reqBody) {
             }
 
             prevMessage.messages.push(message);
+            prevMessage.messageId = newMessageId;
+
+            //Add a new message for new doctor
+            prevMessage = globalMessages[userName][docName];
+
+            record.docName = docName;
+
+            if (prevMessage == null || prevMessage == undefined) {
+                prevMessage = {
+                    messageId: 0,
+                    messages: [],
+                    designation: findDesignation(docName)
+                };
+                globalMessages[userName][docName] = prevMessage;
+            }
+
+            var newMessageId = prevMessage.messageId + 1;
+            if (newMessageId == 1) {
+                var message = {
+                    id: newMessageId,
+                    template: template.TEMPLATE_1,
+                    time: new Date(),
+                    userSent: false,
+                    shortMessage: 'Your detail is safe'
+                }
+                prevMessage.messages.push(message);
+                newMessageId = newMessageId + 1;
+            }
+
+            var message_input = {
+                id: newMessageId,
+                template: template.TEMPLATE_6,
+                time: new Date(),
+                userSent: false,
+                shortMessage: 'Hello ' + userName + ", I am " + docName + ". Please tell me how may I help you",
+                actMessage: 'Hello ' + userName + ", I am " + docName + ". Please tell me how may I help you"
+            }
+
+
+            prevMessage.messages.push(message_input);
+
             prevMessage.messageId = newMessageId;
 
         }

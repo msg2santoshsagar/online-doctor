@@ -10,19 +10,19 @@ var userDetail = {
             designation: 'General Physician'
         }, {
             name: 'Dr. Meenakhsi',
-            designation: 'Gynaecologist,'
+            designation: 'Gynaecologist'
         }, {
             name: 'Dr. Mahesh',
-            designation: 'cardiologist)'
+            designation: 'cardiologist'
         }, {
             name: 'Dr. Saluke',
             designation: 'Paediatrician'
         }, {
             name: 'Dr. Daya',
-            designation: 'Paediatrician,'
+            designation: 'Paediatrician'
         }, {
             name: 'Dr. Shreya',
-            designation: 'Gynaecologist,'
+            designation: 'Gynaecologist'
         }, {
             name: 'Dr. Nidhi',
             designation: 'cardiologist'

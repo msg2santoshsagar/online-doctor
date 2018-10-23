@@ -52,6 +52,13 @@ router.post('/answerSelected', function (req, res, next) {
             task: 'NEW_MESSAGE_AVAILABLE',
             from: userDetail.DR_ASSISTANT_NAME
         });
+        if (messages.docName != undefined) {
+            wss.sendMessage(userName, {
+                task: 'NEW_MESSAGE_AVAILABLE',
+                from: messages.docName
+            });
+            delete messages.docName;
+        }
 
         res.send(messages);
         return;

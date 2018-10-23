@@ -319,6 +319,14 @@ select {
   background-color: grey;
 }
 
+.disabled-input input {
+  background-color: grey;
+}
+
+.disabled-input textarea {
+  background-color: grey;
+}
+
 .disabled-input button:hover {
   cursor: not-allowed;
   background-color: grey;
