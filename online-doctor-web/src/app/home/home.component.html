@@ -88,7 +88,7 @@
               <p class="m-0">Your chat consultation details will remain confendintial.</p>
             </div>
 
-            <div class="col-md-12 p-0" *ngIf=" message.template == 'TEMPLATE_2' " [ngClass]="{'disabled-input': message.oldMessage }">
+            <div class="col-md-12 p-0" *ngIf=" message.template == 'TEMPLATE_2' " [ngClass]="{'disabled-input': message.oldMessage}">
               <div class="row m-0">
                 <div class="col-md-6">
                   <p class="d-none">To take some space</p>
@@ -97,12 +97,14 @@
                   <div class="text-message">
                     <p>select one option</p>
                     <div class="message-button-group">
-                      <button (click)="!message.oldMessage && setAnswer(message,'self') && OnAnswerSelected(message)">My
+                      <button (click)="!message.oldMessage && setAnswer(message,'self') && OnAnswerSelected(message)"
+                        [ngClass]="{selectedButton: message.answer == 'self' }">My
                         self</button>
-                      <button (click)="!message.oldMessage && setAnswer(message,'some_one_else') && OnAnswerSelected(message)">Some
+                      <button (click)="!message.oldMessage && setAnswer(message,'some_one_else') && OnAnswerSelected(message)"
+                        [ngClass]="{selectedButton: message.answer == 'some_one_else' }">Some
                         One else</button>
                     </div>
-                    <p class="text-message-time m-0">10:41 pm</p>
+                    <p class="text-message-time m-0">{{message.time | chatTimeIndicator}}</p>
                   </div>
                 </div>
 
@@ -114,70 +116,19 @@
               </div>
             </div>
 
-            <div class="col-md-12 p-0" *ngIf="false">
-
-              <div class="row m-0">
-                <div class="col-sm-1 col-xs-1 p-0">
-                  <div class="avatar-icon-sm">
-                    <img src="./../../assets/images/docter_color.png">
-                  </div>
-                </div>
-
-                <div class="col-md-9 p-0">
-                  <div class="text-message">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
-                    printer took a galley of type and scrambled it to make a type specimen book. It has survived not
-                    only five centuries, but also the leap into electronic typesetting, remaining essentially
-                    unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem
-                    Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including
-                    versions of Lorem Ipsum.
-                    <br />
-                    <p class="text-message-time m-0">10:41 pm</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-12 p-0" *ngIf="false">
-              <div class="row m-0">
-                <div class="col-md-2">
-                  <p class="d-none">To take some space</p>
-                </div>
-                <div class="col-md-9 p-0">
-                  <div class="text-message">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
-                    printer took a galley of type and scrambled it to make a type specimen book. It has survived not
-                    only five centuries, but also the leap into electronic typesetting, remaining essentially
-                    unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem
-                    Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including
-                    versions of Lorem Ipsum.
-                    <br />
-                    <p class="text-message-time m-0">10:41 pm</p>
-                  </div>
-                </div>
-
-                <div class="col-sm-1 col-xs-1 p-0">
-                  <div class="avatar-icon-sm">
-                    <img src="./../../assets/images/docter_color.png">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-            <div class="col-md-12 p-0" *ngIf="false">
+            <div class="col-md-12 p-0" *ngIf=" message.template == 'TEMPLATE_3' ">
               <div class="row m-0">
                 <div class="col-md-6">
                   <p class="d-none">To take some space</p>
                 </div>
                 <div class="col-md-5 p-0">
                   <div class="text-message">
-                    <p>Please Enter your name {{d}}</p>
+                    <p>Please Enter patient name</p>
                     <div class="message-input-group">
-                      <input type="text" class="" placeholder="name" />
-                      <button>SUBMIT</button>
+                      <input type="text" class="" placeholder="name" [(ngModel)]="message.answer" />
+                      <button (click)="!message.oldMessage && OnAnswerSelected(message)">SUBMIT</button>
                     </div>
-                    <p class="text-message-time m-0">10:41 pm</p>
+                    <p class="text-message-time m-0">{{message.time | chatTimeIndicator}}</p>
                   </div>
                 </div>
 
@@ -189,38 +140,7 @@
               </div>
             </div>
 
-            <div class="col-md-12 p-0" *ngIf="false">
-              <div class="row m-0">
-                <div class="col-md-6">
-                  <p class="d-none">To take some space</p>
-                </div>
-                <div class="col-md-5 p-0">
-                  <div class="text-message">
-                    <p>Please Enter your name {{d}}</p>
-                    <div class="message-input-group">
-                      <select>
-                        <option hidden>select one</option>
-                        <option>General Physician</option>
-                        <option>Gynaecologist</option>
-                        <option>Paediatrician</option>
-                        <option>cardiologist</option>
-                      </select>
-                      <button>SUBMIT</button>
-                    </div>
-                    <p class="text-message-time m-0">10:41 pm</p>
-                  </div>
-                </div>
-
-                <div class="col-sm-1 col-xs-1 p-0">
-                  <div class="avatar-icon-sm">
-                    <img src="./../../assets/images/docter_color.png">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-            <div class="col-md-12 p-0" *ngIf="false">
+            <div class="col-md-12 p-0" *ngIf=" message.template == 'TEMPLATE_4' ">
               <div class="row m-0">
                 <div class="col-md-6">
                   <p class="d-none">To take some space</p>
@@ -229,10 +149,10 @@
                   <div class="text-message">
                     <p>Describe symptomps {{d}}</p>
                     <div class="message-input-group">
-                      <textarea type="text" class="" placeholder="symptomps"></textarea>
-                      <button>SUBMIT</button>
+                      <textarea type="text" class="" placeholder="symptomps" [(ngModel)]="message.answer"></textarea>
+                      <button (click)="!message.oldMessage && OnAnswerSelected(message)">SUBMIT</button>
                     </div>
-                    <p class="text-message-time m-0">10:41 pm</p>
+                    <p class="text-message-time m-0">{{message.time | chatTimeIndicator}}</p>
                   </div>
                 </div>
 
@@ -243,6 +163,81 @@
                 </div>
               </div>
             </div>
+
+            <div class="col-md-12 p-0" *ngIf=" message.template == 'TEMPLATE_5' ">
+              <div class="row m-0">
+                <div class="col-md-6">
+                  <p class="d-none">To take some space</p>
+                </div>
+                <div class="col-md-5 p-0">
+                  <div class="text-message">
+                    <p>Please select doctor type</p>
+                    <div class="message-input-group">
+                      <select [(ngModel)]="message.answer">
+                        <option hidden>select one</option>
+                        <option>General Physician</option>
+                        <option>Gynaecologist</option>
+                        <option>Paediatrician</option>
+                        <option>cardiologist</option>
+                      </select>
+                      <button (click)="!message.oldMessage && OnAnswerSelected(message)">SUBMIT</button>
+                    </div>
+                    <p class="text-message-time m-0">{{message.time | chatTimeIndicator}}</p>
+                  </div>
+                </div>
+
+                <div class="col-sm-1 col-xs-1 p-0">
+                  <div class="avatar-icon-sm">
+                    <img src="./../../assets/images/docter_color.png">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12 p-0" *ngIf="false">
+
+              <div class="row m-0">
+                <div class="col-sm-1 col-xs-1 p-0">
+                  <div class="avatar-icon-sm">
+                    <img src="./../../assets/images/docter_color.png">
+                  </div>
+                </div>
+
+                <div class="col-md-9 p-0">
+                  <div class="text-message">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
+                    printer took a galley of type and scrambled it to make a type specimen book. It has survived not
+                    only five centuries, but also the leap into electronic typesetting, remaining essentially
+                    unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem
+                    Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including
+                    versions of Lorem Ipsum.
+                    <br />
+                    <p class="text-message-time m-0">10:41 pm</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12 p-0" *ngIf=" message.template == 'TEMPLATE_6' ">
+              <div class="row m-0">
+                <div class="col-md-2">
+                  <p class="d-none">To take some space</p>
+                </div>
+                <div class="col-md-9 p-0">
+                  <div class="text-message">{{message.actMessage}}
+                    <br />
+                    <p class="text-message-time m-0">{{message.time | chatTimeIndicator}}</p>
+                  </div>
+                </div>
+
+                <div class="col-sm-1 col-xs-1 p-0">
+                  <div class="avatar-icon-sm">
+                    <img src="./../../assets/images/docter_color.png">
+                  </div>
+                </div>
+              </div>
+            </div>
+
 
 
 

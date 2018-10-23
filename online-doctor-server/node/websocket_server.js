@@ -29,11 +29,11 @@ function messageHandler(identity, message) {
 
 function handleNewConsultation(identity, messageJson) {
     console.log("handleNewConsultation :: Input :: ", messageJson);
-    messageService.newConsultationForUser(identity)
+    messageService.newConsultationForUser(identity);
     sendMessage(identity, {
         task: 'NEW_MESSAGE_AVAILABLE',
         from: userDetail.DR_ASSISTANT_NAME
-    })
+    });
 }
 
 
@@ -46,40 +46,42 @@ function init(server) {
 
     wss.on('connection', function connection(ws, request) {
 
-        try {
-            var cookies = request.headers.cookie.split("=");
-            var sessionId = cookies[1];
-            //console.log("Session Id found ", sessionId);
-            //console.log("Session store :: ", _this.sessionStore);
+        if (ws.appSessionId == undefined || ws.appSessionId == null) {
+            try {
+                var cookies = request.headers.cookie.split("=");
+                var sessionId = cookies[1];
+                //console.log("Session Id found ", sessionId);
+                //console.log("Session store :: ", _this.sessionStore);
 
-            var actualSessionId = '';
-            for (var i = 0; i < sessionId.length; i++) {
-                var c = sessionId.charAt(i);
-                if (i <= 3) {
-                    continue;
+                var actualSessionId = '';
+                for (var i = 0; i < sessionId.length; i++) {
+                    var c = sessionId.charAt(i);
+                    if (i <= 3) {
+                        continue;
+                    }
+                    if (c == '.') {
+                        break;
+                    }
+                    actualSessionId += c;
                 }
-                if (c == '.') {
-                    break;
-                }
-                actualSessionId += c;
+                // console.log("Actual Session Id :: ",actualSessionId);
+                _this.sessionStore.get(actualSessionId, function (err, session) {
+                    if (session == null || session.appData == null || session.appData.userName == null) {
+                        ws.close(undefined, "Session not active");
+                        return;
+                    }
+                    console.log("Session found :: ", session.appData);
+                    var userName = session.appData.userName;
+                    console.log("user Name :: ", userName);
+                    clients[userName] = ws;
+                    ws.appSessionId = userName;
+                });
+
+            } catch (e) {
+                console.log("Failed to parse session id, so rejecting :: ", e);
+                ws.close(undefined, "Session not active");
+                return;
             }
-            // console.log("Actual Session Id :: ",actualSessionId);
-            _this.sessionStore.get(actualSessionId, function (err, session) {
-                if (session == null || session.appData == null || session.appData.userName == null) {
-                    ws.close(undefined, "Session not active");
-                    return;
-                }
-                console.log("Session found :: ", session.appData);
-                var userName = session.appData.userName;
-                console.log("user Name :: ", userName);
-                clients[userName] = ws;
-                ws.appSessionId = userName;
-            });
-
-        } catch (e) {
-            console.log("Failed to parse session id, so rejecting :: ", e);
-            ws.close(undefined, "Session not active");
-            return;
         }
 
         ws.send('connection established');

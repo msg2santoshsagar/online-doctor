@@ -324,3 +324,13 @@ select {
   background-color: grey;
   color: black;
 }
+
+.selectedButton {
+  cursor: not-allowed;
+  background-color: rgb(75, 255, 75) !important;
+}
+
+.selectedButton :hover {
+  cursor: not-allowed;
+  background-color: rgb(75, 255, 75) !important;
+}

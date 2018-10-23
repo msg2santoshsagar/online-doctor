@@ -50,6 +50,23 @@ function findDesignation(doctorName) {
     return "Patient";
 }
 
+function findRandomDocByDesignation(designation) {
+
+    var doctors = userDetail.Doctors;
+    var dlist = [];
+    for (var i = 0; i < doctors.length; i++) {
+        if (doctors[i].designation == designation) {
+            dlist.push(doctors[i]);
+        }
+    }
+
+    var len = dlist.length;
+
+    var idx = Math.floor(Math.random() * len);
+
+    return dlist[idx].name;
+}
+
 function newConsultationForUser(userName) {
 
     console.log("New consultation req for user ", userName);
@@ -110,8 +127,120 @@ function newConsultationForUser(userName) {
     globalMessages[userName][from] = prevMessage;
 }
 
+function answerSelected(userName, reqBody) {
+
+    var messageId = reqBody.id;
+    var answer = reqBody.answer;
+
+    var prevMessage = globalMessages[userName][userDetail.DR_ASSISTANT_NAME];
+    var temp = prevMessage.messages;
+
+    var record = null;
+
+    for (var i = 0; i < temp.length; i++) {
+        if (temp[i].id == messageId) {
+            temp[i].oldMessage = true;
+            temp[i].answer = answer;
+            record = temp[i];
+            break;
+        }
+    }
+
+    if (record != null) {
+
+        if (record.template == template.TEMPLATE_2) {
+
+            if (answer == 'self') {
+                var newMessageId = prevMessage.messageId + 1;
+                var message = {
+                    id: newMessageId,
+                    template: template.TEMPLATE_4,
+                    time: new Date(),
+                    userSent: false,
+                    shortMessage: 'Please describe the symptomps'
+                }
+                prevMessage.messages.push(message);
+                prevMessage.messageId = newMessageId;
+
+            } else {
+
+                var newMessageId = prevMessage.messageId + 1;
+                var message = {
+                    id: newMessageId,
+                    template: template.TEMPLATE_3,
+                    time: new Date(),
+                    userSent: false,
+                    shortMessage: 'Please Enter the patient name'
+                }
+                prevMessage.messages.push(message);
+                prevMessage.messageId = newMessageId;
+
+            }
+
+        }
+
+
+        if (record.template == template.TEMPLATE_3) {
+
+            var newMessageId = prevMessage.messageId + 1;
+            var message = {
+                id: newMessageId,
+                template: template.TEMPLATE_4,
+                time: new Date(),
+                userSent: false,
+                shortMessage: 'Please describe the symptomps'
+            }
+
+            prevMessage.messages.push(message);
+            prevMessage.messageId = newMessageId;
+
+        }
+
+        if (record.template == template.TEMPLATE_4) {
+
+            var newMessageId = prevMessage.messageId + 1;
+            var message = {
+                id: newMessageId,
+                template: template.TEMPLATE_5,
+                time: new Date(),
+                userSent: false,
+                shortMessage: 'Please select the doctor type'
+            }
+
+            prevMessage.messages.push(message);
+            prevMessage.messageId = newMessageId;
+
+        }
+
+        if (record.template == template.TEMPLATE_5) {
+
+            var docName = findRandomDocByDesignation(answer);
+
+            var newMessageId = prevMessage.messageId + 1;
+            var message = {
+                id: newMessageId,
+                template: template.TEMPLATE_6,
+                time: new Date(),
+                userSent: false,
+                shortMessage: 'Doctor will contact you shortly',
+                actMessage: docName + ' will assist you in this matter. we will contact you soon.'
+            }
+
+            prevMessage.messages.push(message);
+            prevMessage.messageId = newMessageId;
+
+        }
+
+    }
+
+    return record;
+
+}
+
+
 module.exports = {
     getMessagesForUser: getMessagesForUser,
     getMessageForUserByDoctor: getMessageForUserByDoctor,
+    answerSelected: answerSelected,
     newConsultationForUser: newConsultationForUser
 }

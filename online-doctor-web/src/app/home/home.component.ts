@@ -232,6 +232,22 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   OnAnswerSelected(message) {
     console.log("Answer selected for :: ", message);
+    let reqBody = {
+      id: message.id,
+      answer: message.answer
+    }
+    if (reqBody.answer == null || reqBody.answer == undefined || reqBody.answer.trim() == '') {
+      console.log("valid answer not available");
+      return;
+    }
+
+    this.http.post(environment.ANSWER_SELECTED_END_POINT, reqBody, this.httpOptions).subscribe(
+      (res: any) => {
+        console.log("Answer selected response : ", res);
+      }, (err: any) => {
+        console.log("Error while answer selected : ", err);
+      }
+    )
   }
 
 
