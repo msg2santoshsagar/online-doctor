@@ -47,7 +47,7 @@ function findDesignation(doctorName) {
             return doctors[i].designation;
         }
     }
-    return "Not Available";
+    return "Patient";
 }
 
 function newConsultationForUser(userName) {
@@ -68,6 +68,19 @@ function newConsultationForUser(userName) {
             messages: [],
             designation: findDesignation(from)
         };
+    } else {
+
+        var localMessageList = prevMessage.messages;
+
+        for (var i = localMessageList.length - 1; i >= 0; i--) {
+            var localMessage = localMessageList[i];
+            if (localMessage.oldMessage != undefined) {
+                break;
+            }
+            localMessage.oldMessage = true;
+        }
+
+
     }
 
     var newMessageId = prevMessage.messageId + 1;

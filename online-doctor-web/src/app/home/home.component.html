@@ -80,7 +80,7 @@
 
 
       <div class="chat-window-main-container">
-        <div class="chat-messages-container">
+        <div class="chat-messages-container" #chatMessageContainer (scroll)="onScroll()">
 
           <div class="row m-0 message-container" *ngFor="let message of currentActiveMessageList">
 
@@ -88,17 +88,19 @@
               <p class="m-0">Your chat consultation details will remain confendintial.</p>
             </div>
 
-            <div class="col-md-12 p-0" *ngIf=" message.template == 'TEMPLATE_2' ">
+            <div class="col-md-12 p-0" *ngIf=" message.template == 'TEMPLATE_2' " [ngClass]="{'disabled-input': message.oldMessage }">
               <div class="row m-0">
                 <div class="col-md-6">
                   <p class="d-none">To take some space</p>
                 </div>
                 <div class="col-md-5 p-0">
                   <div class="text-message">
-                    <p>select one option {{d}}</p>
+                    <p>select one option</p>
                     <div class="message-button-group">
-                      <button>My self</button>
-                      <button>Some One else</button>
+                      <button (click)="!message.oldMessage && setAnswer(message,'self') && OnAnswerSelected(message)">My
+                        self</button>
+                      <button (click)="!message.oldMessage && setAnswer(message,'some_one_else') && OnAnswerSelected(message)">Some
+                        One else</button>
                     </div>
                     <p class="text-message-time m-0">10:41 pm</p>
                   </div>

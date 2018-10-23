@@ -309,3 +309,18 @@ select {
 .activeDoctor {
   background-color: #f2f2f2;
 }
+
+.disabled-input {
+  /* cursor: none; */
+}
+
+.disabled-input button {
+  cursor: not-allowed;
+  background-color: grey;
+}
+
+.disabled-input button:hover {
+  cursor: not-allowed;
+  background-color: grey;
+  color: black;
+}
