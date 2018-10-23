@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class AuthService {
     withCredentials: true,
   };
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     var loggedIn = sessionStorage.getItem('loggedIn');
     if (loggedIn != null) {
       this._userLoggedIn = loggedIn == 'true' ? true : false;
@@ -26,12 +27,14 @@ export class AuthService {
     }
   }
 
-  FindCurrentUser() {
+  validateLogin() {
     this.http.get(environment.CURRENT_USER_END_POINT, this.httpOptions).subscribe(
       (res: any) => {
         console.log("current user response :: ", res);
         if (res != null && res.userName != null) {
           this.doLogin(res.userName);
+        } else {
+          this.doLogOut();
         }
       }, (err: any) => {
         console.log("current user error :: ", err);
@@ -46,11 +49,15 @@ export class AuthService {
     this._userName = userName;
   }
 
-  doLogOut() {
+  doLogOut(redirectToLogin?: boolean) {
+    console.log("Doing logout");
     this.http.get(environment.LOGOUT_END_POINT, this.httpOptions).subscribe();
     sessionStorage.clear();
     this._userLoggedIn = false;
     this._userName = null;
+    if (redirectToLogin == true) {
+      this.router.navigate['login'];
+    }
   }
 
   isUserLoggedIn(): boolean {

@@ -18,16 +18,21 @@ export class HomeComponent implements OnInit, OnDestroy {
   currentActiveDoctorName: string = 'Start New consultation'; // Current Acitve message list
 
   showReplyBox: boolean = false;
+  DR_ASSISTANT_NAME: string = 'Dr. Assistant';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     withCredentials: true,
   };
 
+  replyMessage: string = '';
+
   @ViewChild("chatMessageContainer") chatMessageContainer: ElementRef;
   disableScrollDown: boolean = false;
 
-  constructor(private router: Router, private authService: AuthService, private webSocketService: WebsocketService, private http: HttpClient) { }
+  constructor(private router: Router, private authService: AuthService, private webSocketService: WebsocketService, private http: HttpClient) {
+    this.authService.validateLogin();
+  }
 
   ngOnInit() {
     this.LoadMessageList();
@@ -81,7 +86,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         } else {
           console.log("In else part");
 
-          if (userName == 'Dr. Assistant') {
+          if (userName == this.DR_ASSISTANT_NAME) {
             var localMessageList = this.globalMessages[userName].messages;
 
             for (var i = localMessageList.length - 1; i >= 0; i--) {
@@ -166,6 +171,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     var doctorNames = Object.keys(this.globalMessages);
     for (var i = 0; i < doctorNames.length; i++) {
       var doctorName = doctorNames[i];
+      console.log("Designation for doctor : ", doctorName, " is ", this.globalMessages[doctorName].designation);
       var doctorDetail = {
         name: doctorName,
         designation: this.globalMessages[doctorName].designation,
@@ -178,6 +184,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.doctorList.length > 0) {
       this.currentActiveDoctorName = this.doctorList[0].name;
       this.currentActiveMessageList = this.globalMessages[this.currentActiveDoctorName].messages;
+    }
+    if (this.currentActiveDoctorName != this.DR_ASSISTANT_NAME) {
+      this.showReplyBox = true;
     }
   }
 
@@ -250,6 +259,41 @@ export class HomeComponent implements OnInit, OnDestroy {
     )
   }
 
+  OnSelectDoctor(doctor) {
+    console.log("Request to select doctor :: ", doctor);
+    if (this.currentActiveDoctorName == doctor.name) {
+      return;
+    }
+    this.currentActiveDoctorName = doctor.name;
+    this.currentActiveMessageList = this.globalMessages[doctor.name].messages;
+    this.showReplyBox = false;
+    if (this.currentActiveDoctorName != this.DR_ASSISTANT_NAME) {
+      this.showReplyBox = true;
+    }
+  }
 
+  OnSendReply(e) {
+    console.log("on send reply called :: ", this.replyMessage);
+    e.preventDefault();
+    let userMessage = this.replyMessage;
+    this.replyMessage = '';
+    this.webSocketService.sendMessage({
+      task: 'TEXT_MESSAGE',
+      from: this.authService.getUsername(),
+      to: this.currentActiveDoctorName,
+      msg: userMessage
+    })
+
+    this.globalMessages[this.currentActiveDoctorName].messages.push({
+      id: this.globalMessages[this.currentActiveDoctorName].messageId + 1,
+      template: 'TEMPLATE_7',
+      time: new Date(),
+      userSent: false,
+      shortMessage: userMessage,
+      actMessage: userMessage
+    });
+    this.globalMessages[this.currentActiveDoctorName].messageId = this.globalMessages[this.currentActiveDoctorName].messageId + 1;
+    this.updateShortMessageAndTime(this.currentActiveDoctorName);
+  }
 
 }

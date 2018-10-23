@@ -18,7 +18,10 @@ function messageHandler(identity, message) {
     switch (task) {
 
         case 'START_NEW_CONSULTATION':
-            handleNewConsultation(identity, message);
+            handleNewConsultation(identity, messageJson);
+            break;
+        case 'TEXT_MESSAGE':
+            handleNewMessage(identity, messageJson);
             break;
         default:
             console.log("No handler defined for ", task);
@@ -33,6 +36,15 @@ function handleNewConsultation(identity, messageJson) {
     sendMessage(identity, {
         task: 'NEW_MESSAGE_AVAILABLE',
         from: userDetail.DR_ASSISTANT_NAME
+    });
+}
+
+function handleNewMessage(identity, messageJson) {
+    console.log("handleNewMessage :: Input :: ", messageJson);
+    messageService.newMessage(messageJson);
+    sendMessage(messageJson.to, {
+        task: 'NEW_MESSAGE_AVAILABLE',
+        from: messageJson.from
     });
 }
 

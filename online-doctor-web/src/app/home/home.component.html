@@ -20,7 +20,8 @@
 
         <div class="profile-lists">
 
-          <div class="row sideBar-body" *ngFor="let doctor of doctorList" [ngClass]="{activeDoctor: doctor.name == currentActiveDoctorName  }">
+          <div class="row sideBar-body" *ngFor="let doctor of doctorList" [ngClass]="{activeDoctor: doctor.name == currentActiveDoctorName  }"
+            (click)="OnSelectDoctor(doctor)">
             <div class="col-sm-1 col-xs-1 sideBar-avatar">
               <div class="avatar-icon">
                 <img src="./../../assets/images/docter_color.png">
@@ -225,22 +226,13 @@
                 </div>
 
                 <div class="col-md-9 p-0">
-                  <div class="text-message">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown
-                    printer took a galley of type and scrambled it to make a type specimen book. It has survived not
-                    only five centuries, but also the leap into electronic typesetting, remaining essentially
-                    unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem
-                    Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including
-                    versions of Lorem Ipsum.
+                  <div class="text-message">{{message.actMessage}}
                     <br />
-                    <p class="text-message-time m-0">10:41 pm</p>
+                    <p class="text-message-time m-0">{{message.time | chatTimeIndicator}}</p>
                   </div>
                 </div>
               </div>
             </div>
-
-
-
 
 
 
@@ -251,7 +243,8 @@
       <!-- Reply Box -->
       <div class="row reply" *ngIf="showReplyBox">
         <div class="col-sm-11 col-xs-11 reply-main">
-          <textarea class="form-control" rows="1" id="comment" placeholder="Enter your message here"></textarea>
+          <textarea class="form-control" rows="1" id="comment" [(ngModel)]="replyMessage" placeholder="Enter your message here"
+            (keyup.enter)="OnSendReply($event)"></textarea>
         </div>
         <div class="col-sm-1 col-xs-1 reply-send">
           <i class="fa fa-send fa-2x" aria-hidden="true"></i>

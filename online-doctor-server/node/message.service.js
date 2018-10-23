@@ -289,10 +289,98 @@ function answerSelected(userName, reqBody) {
 
 }
 
+function newMessage(messageJson) {
+    console.log("new message for process : ", messageJson);
+
+    var from = messageJson.from;
+    var to = messageJson.to;
+    var msg = messageJson.msg;
+    var time = new Date();
+
+    /* console.log("From  : ", from);
+    console.log("to  : ", to);
+    console.log("msg  : ", msg);
+    console.log("time  : ", time); */
+
+    if (globalMessages[from] == null || globalMessages[from] == undefined) {
+        globalMessages[from] = {};
+    }
+
+    if (globalMessages[from][to] == null || globalMessages[from][to] == undefined) {
+        globalMessages[from][to] = {
+            messageId: 0,
+            messages: [],
+            designation: findDesignation(to)
+        }
+        var infoMessage = {
+            id: globalMessages[from][to].messageId + 1,
+            template: template.TEMPLATE_1,
+            time: time,
+            userSent: false,
+            shortMessage: 'Your detail is safe'
+        }
+        globalMessages[from][to].messages.push(infoMessage);
+        globalMessages[from][to].messageId = globalMessages[from][to].messageId + 1;
+    }
+
+    var fromMessages = globalMessages[from][to];
+    var newMessageId = fromMessages.messageId + 1;
+    var fMsg = {
+        id: newMessageId,
+        template: template.TEMPLATE_7,
+        time: time,
+        userSent: false,
+        shortMessage: msg,
+        actMessage: msg
+    }
+    globalMessages[from][to].messages.push(fMsg);
+    globalMessages[from][to].messageId = globalMessages[from][to].messageId + 1;
+
+    if (globalMessages[to] == null || globalMessages[to] == undefined) {
+        globalMessages[to] = {};
+    }
+
+    if (globalMessages[to][from] == null || globalMessages[to][from] == undefined) {
+        globalMessages[to][from] = {
+            messageId: 0,
+            messages: [],
+            designation: findDesignation(from)
+        }
+        var infoMessage = {
+            id: globalMessages[to][from].messageId + 1,
+            template: template.TEMPLATE_1,
+            time: time,
+            userSent: false,
+            shortMessage: 'Your detail is safe'
+        }
+        globalMessages[to][from].messages.push(infoMessage);
+        globalMessages[to][from].messageId = globalMessages[to][from].messageId + 1;
+    }
+
+
+    var toMessages = globalMessages[to][from];
+    newMessageId = toMessages.messageId + 1;
+    var tMsg = {
+        id: newMessageId,
+        template: template.TEMPLATE_6,
+        time: time,
+        userSent: false,
+        shortMessage: msg,
+        actMessage: msg
+    }
+    globalMessages[to][from].messages.push(tMsg);
+    globalMessages[to][from].messageId = globalMessages[to][from].messageId + 1;
+
+    //console.log("Message saved in memory :: ", globalMessages[from][to]);
+
+
+}
+
 
 module.exports = {
     getMessagesForUser: getMessagesForUser,
     getMessageForUserByDoctor: getMessageForUserByDoctor,
     answerSelected: answerSelected,
+    newMessage: newMessage,
     newConsultationForUser: newConsultationForUser
 }
