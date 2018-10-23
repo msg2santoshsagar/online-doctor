@@ -20,7 +20,9 @@ app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({
+  extended: false
+}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -35,17 +37,12 @@ app.use(cors(corsOptions));
 
 var sessionStore = new session.MemoryStore();
 
-var sessionData = session(
-  {
-    store: sessionStore,
-    secret: 'online-doctor-server',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      maxAge: 600000
-    }
-  }
-);
+var sessionData = session({
+  store: sessionStore,
+  secret: 'online-doctor-server',
+  resave: false,
+  saveUninitialized: true
+});
 
 // Use the session middleware
 app.use(sessionData);

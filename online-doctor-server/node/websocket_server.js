@@ -23,11 +23,21 @@ function messageHandler(identity, message) {
         case 'TEXT_MESSAGE':
             handleNewMessage(identity, messageJson);
             break;
+        case 'USER_TYPING_MESSAGE':
+            handlerUserTyping(identity, messageJson);
+            break;
         default:
             console.log("No handler defined for ", task);
 
     }
 
+}
+
+function handlerUserTyping(identity, messageJson) {
+    sendMessage(messageJson.to, {
+        task: 'USER_TYPING_MESSAGE',
+        who: messageJson.from
+    });
 }
 
 function handleNewConsultation(identity, messageJson) {
