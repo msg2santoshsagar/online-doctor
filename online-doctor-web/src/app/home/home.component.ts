@@ -5,6 +5,8 @@ import { WebsocketService } from '../service/websocket.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 
+declare let paypal: any;
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -27,8 +29,27 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   replyMessage: string = '';
 
+  feePackages = [{
+    id: 1,
+    name: 'One',
+    credit: 1,
+    price: 199
+  }, {
+    id: 2,
+    name: 'Five',
+    credit: 5,
+    price: 899
+  }, {
+    id: 3,
+    name: 'Ten',
+    credit: 10,
+    price: 1599
+  }];
+
   @ViewChild("chatMessageContainer") chatMessageContainer: ElementRef;
   disableScrollDown: boolean = false;
+
+
 
   constructor(private router: Router, private authService: AuthService, private webSocketService: WebsocketService, private http: HttpClient) {
     this.authService.validateLogin();
@@ -219,6 +240,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngAfterViewChecked() {
     this.scrollToBottom();
+    this.initPaypalButton();
   }
 
   onScroll() {
@@ -327,5 +349,82 @@ export class HomeComponent implements OnInit, OnDestroy {
       from: this.authService.getUsername()
     });
   }
+
+
+  payConsultationFee(feePackage) {
+    console.log("Request to pay consultation fee for : ", feePackage);
+  }
+
+  addScript: boolean = false;
+  paypalLoad: boolean = true;
+
+  finalAmount: number = 1;
+
+  paypalConfig = {
+    env: 'sandbox',
+    client: {
+      sandbox: 'demo_sandbox_client_id',
+      production: '<your-production-key here>'
+    },
+    commit: true,
+    locale: 'en_US',
+    style: {
+      size: 'small',
+      color: 'gold',
+      shape: 'pill',
+    },
+    payment: (data, actions) => {
+      return actions.payment.create({
+        payment: {
+          transactions: [
+            {
+              amount: {
+                total: this.finalAmount,
+                currency: 'USD'
+              }
+            }
+          ]
+        },
+        experience: {
+          input_fields: {
+            no_shipping: 1
+          }
+        }
+      });
+    },
+    onAuthorize: (data, actions) => {
+      return actions.payment.execute().then((payment) => {
+        //Do something when payment is successful.
+        console.log("Payment successfull for :: ", payment);
+      })
+    },
+    onCancel: (data, actions) => {
+      console.log("Payment cancelled");
+    },
+    onError: function (err) {
+      console.log("Payment cancelled due to error ", err);
+    }
+  };
+
+  initPaypalButton(): void {
+    if (!this.addScript) {
+      this.addPaypalScript().then(() => {
+        paypal.Button.render(this.paypalConfig, '#paypal-checkout-btn');
+        this.paypalLoad = false;
+      })
+    }
+  }
+
+  addPaypalScript() {
+    this.addScript = true;
+    return new Promise((resolve, reject) => {
+      let scripttagElement = document.createElement('script');
+      scripttagElement.src = 'https://www.paypalobjects.com/api/checkout.js';
+      scripttagElement.onload = resolve;
+      document.body.appendChild(scripttagElement);
+    })
+  }
+
+
 
 }

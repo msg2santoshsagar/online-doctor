@@ -87,7 +87,8 @@
 
         <div class="chat-messages-container" #chatMessageContainer (scroll)="onScroll()">
 
-          <div class="row m-0 message-container " *ngFor="let message of currentActiveMessageList">
+
+          <div class="row m-0 message-container" *ngFor="let message of currentActiveMessageList">
 
             <div class="message-template-1" *ngIf=" message.template == 'TEMPLATE_1' ">
               <p class="m-0">Your chat consultation details will remain confendintial.</p>
@@ -238,9 +239,40 @@
               </div>
             </div>
 
-
-
           </div>
+
+          <!-- *ngIf=" message.template == 'TEMPLATE_2' " [ngClass]="{'disabled-input': message.oldMessage}" -->
+          <div class="col-md-12 p-0">
+            <div class="row m-0">
+              <div class="col-md-6">
+                <p class="d-none">To take some space</p>
+              </div>
+              <div class="col-md-5 p-0">
+                <div class="text-message">
+                  <p>Choose Package</p>
+                  <div class="row package-container" *ngFor="let p of feePackages">
+                    <div class="col-md-8">
+                      {{p.name}} time at {{p.price}}
+                    </div>
+                    <div class="col-md-4 message-button-group">
+                      <button class="btn-small" (click)="payConsultationFee(p)">Pay</button>
+                    </div>
+                  </div>
+                  <div id="paypal-checkout-btn"></div>
+                  <p class="text-message-time m-0">05 : 54 PM</p>
+                </div>
+              </div>
+
+              <div class="col-sm-1 col-xs-1 p-0">
+                <div class="avatar-icon-sm">
+                  <img src="./../../assets/images/docter_color.png">
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
 
         </div><!-- chat message main container :: END -->
 
