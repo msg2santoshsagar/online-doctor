@@ -58,7 +58,7 @@ router.post('/answerSelected', function (req, res, next) {
                 from: messages.docName
             });
             wss.sendMessage(messages.docName, {
-                task: 'NEW_MESSAGE_AVAILABLE',
+                task: 'NEW_MESSAGE_AVAI(LABLE',
                 from: userName
             });
             delete messages.docName;
@@ -71,6 +71,11 @@ router.post('/answerSelected', function (req, res, next) {
 
     res.send(null);
 
+});
+
+router.post('/consultationPacagePurchased', function (req, res, next) {
+    var record = messageService.consultationPackagePurchased(req.body);
+    res.send(record);
 });
 
 

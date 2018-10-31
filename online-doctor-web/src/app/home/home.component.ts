@@ -49,6 +49,84 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild("chatMessageContainer") chatMessageContainer: ElementRef;
   disableScrollDown: boolean = false;
 
+  addScript: boolean = false;
+  finalAmount: number = 1;
+  selectedMessage;
+
+  paypalConfig = {
+    env: 'sandbox',
+    client: {
+      sandbox: 'demo_sandbox_client_id',
+      production: '<your-production-key here>'
+    },
+    commit: true,
+    locale: 'en_US',
+    style: {
+      size: 'small',
+      color: 'gold',
+      shape: 'pill',
+    },
+    payment: (data, actions) => {
+      return actions.payment.create({
+        payment: {
+          transactions: [
+            {
+              amount: {
+                total: this.finalAmount,
+                currency: 'USD'
+              }
+            }
+          ]
+        },
+        experience: {
+          input_fields: {
+            no_shipping: 1
+          }
+        }
+      });
+    },
+    onAuthorize: (data, actions) => {
+      return actions.payment.execute().then((payment) => {
+        //Do something when payment is successful.
+        console.log("Payment successfull for :: ", payment);
+        let request = {
+          user: this.authService.getUsername(),
+          message: this.selectedMessage,
+          payment: payment
+        }
+        this.http.post(environment.CONSULATATION_PACKAGE_PURCHASED_END_POINT, request, this.httpOptions).subscribe(
+          (response: any) => {
+            console.log("Consultation fee purchased :: ", response);
+
+            var messages = this.globalMessages[this.DR_ASSISTANT_NAME];
+
+            var messageList = messages.messages;
+
+            for (var i = 0; i < messageList.length; i++) {
+
+              if (messageList[i].id === response.id) {
+                messageList[i] = response;
+                break;
+              }
+
+            }
+
+
+          }, (err: any) => {
+            console.log("Error occured while buying consultation fee package : ", err);
+          }
+        )
+      })
+    },
+    onCancel: (data, actions) => {
+      console.log("Payment cancelled");
+      alert("You cancelled the payment");
+    },
+    onError: function (err) {
+      console.log("Payment cancelled due to error ", err);
+      alert("You cancelled the payment");
+    }
+  };
 
 
   constructor(private router: Router, private authService: AuthService, private webSocketService: WebsocketService, private http: HttpClient) {
@@ -240,7 +318,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngAfterViewChecked() {
     this.scrollToBottom();
-    this.initPaypalButton();
   }
 
   onScroll() {
@@ -351,66 +428,19 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
 
-  payConsultationFee(feePackage) {
-    console.log("Request to pay consultation fee for : ", feePackage);
+
+  payConsultationFee(message, feePackage) {
+    console.log("Request to pay consultation fee for : ", message, feePackage);
+    message.selectedPackage = feePackage;
+    this.selectedMessage = message;
+    this.finalAmount = feePackage.price;
+    this.initPaypalButton();
   }
-
-  addScript: boolean = false;
-  paypalLoad: boolean = true;
-
-  finalAmount: number = 1;
-
-  paypalConfig = {
-    env: 'sandbox',
-    client: {
-      sandbox: 'demo_sandbox_client_id',
-      production: '<your-production-key here>'
-    },
-    commit: true,
-    locale: 'en_US',
-    style: {
-      size: 'small',
-      color: 'gold',
-      shape: 'pill',
-    },
-    payment: (data, actions) => {
-      return actions.payment.create({
-        payment: {
-          transactions: [
-            {
-              amount: {
-                total: this.finalAmount,
-                currency: 'USD'
-              }
-            }
-          ]
-        },
-        experience: {
-          input_fields: {
-            no_shipping: 1
-          }
-        }
-      });
-    },
-    onAuthorize: (data, actions) => {
-      return actions.payment.execute().then((payment) => {
-        //Do something when payment is successful.
-        console.log("Payment successfull for :: ", payment);
-      })
-    },
-    onCancel: (data, actions) => {
-      console.log("Payment cancelled");
-    },
-    onError: function (err) {
-      console.log("Payment cancelled due to error ", err);
-    }
-  };
 
   initPaypalButton(): void {
     if (!this.addScript) {
       this.addPaypalScript().then(() => {
         paypal.Button.render(this.paypalConfig, '#paypal-checkout-btn');
-        this.paypalLoad = false;
       })
     }
   }

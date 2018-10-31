@@ -239,40 +239,40 @@
               </div>
             </div>
 
-          </div>
 
-          <!-- *ngIf=" message.template == 'TEMPLATE_2' " [ngClass]="{'disabled-input': message.oldMessage}" -->
-          <div class="col-md-12 p-0">
-            <div class="row m-0">
-              <div class="col-md-6">
-                <p class="d-none">To take some space</p>
-              </div>
-              <div class="col-md-5 p-0">
-                <div class="text-message">
-                  <p>Choose Package</p>
-                  <div class="row package-container" *ngFor="let p of feePackages">
-                    <div class="col-md-8">
-                      {{p.name}} time at {{p.price}}
-                    </div>
-                    <div class="col-md-4 message-button-group">
-                      <button class="btn-small" (click)="payConsultationFee(p)">Pay</button>
-                    </div>
-                  </div>
-                  <div id="paypal-checkout-btn"></div>
-                  <p class="text-message-time m-0">05 : 54 PM</p>
+            <div class="col-md-12 p-0" *ngIf="message.template == 'TEMPLATE_8' " [ngClass]="{'disabled-input': message.oldMessage}">
+              <div class="row m-0">
+                <div class="col-md-6">
+                  <p class="d-none">To take some space</p>
                 </div>
-              </div>
+                <div class="col-md-5 p-0">
+                  <div class="text-message">
+                    <p>Choose Package</p>
+                    <div class="row package-container" *ngFor="let p of feePackages">
+                      <div class="col-md-8">
+                        {{p.name}} time at {{p.price}}
+                      </div>
+                      <div class="col-md-4 message-button-group" [ngClass]="{'selected-button':  message.selectedPackage?.id === p.id }">
+                        <button class="btn-small" (click)="payConsultationFee(message,p)">Select</button>
+                      </div>
+                    </div>
+                    <div id="paypal-checkout-btn"></div>
+                    <p class="text-message-time m-0">05 : 54 PM</p>
+                  </div>
+                </div>
 
-              <div class="col-sm-1 col-xs-1 p-0">
-                <div class="avatar-icon-sm">
-                  <img src="./../../assets/images/docter_color.png">
+                <div class="col-sm-1 col-xs-1 p-0">
+                  <div class="avatar-icon-sm">
+                    <img src="./../../assets/images/docter_color.png">
+                  </div>
                 </div>
               </div>
             </div>
+
+
+
+
           </div>
-
-
-
 
         </div><!-- chat message main container :: END -->
 

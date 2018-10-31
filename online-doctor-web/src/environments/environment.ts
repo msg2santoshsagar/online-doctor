@@ -12,7 +12,8 @@ export const environment = {
   LOGOUT_END_POINT: BASE_URL + "/api/users/logout",
   MESSAGE_LIST_END_POINT: BASE_URL + "/api/messages/messageList",
   MESSAGE_LIST_BY_USER_END_POINT: BASE_URL + "/api/messages/messageListByUser",
-  ANSWER_SELECTED_END_POINT: BASE_URL + "/api/messages/answerSelected"
+  ANSWER_SELECTED_END_POINT: BASE_URL + "/api/messages/answerSelected",
+  CONSULATATION_PACKAGE_PURCHASED_END_POINT: BASE_URL + "/api/messages/consultationPacagePurchased"
 };
 
 /*

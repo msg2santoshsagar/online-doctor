@@ -94,6 +94,7 @@ function newConsultationForUser(userName) {
     if (prevMessage == null) {
         prevMessage = {
             messageId: 0,
+            consultationCredit: 0,
             messages: [],
             designation: findDesignation(from)
         };
@@ -226,6 +227,27 @@ function answerSelected(userName, reqBody) {
         if (record.template == template.TEMPLATE_5) {
             // Final One.. Assign a doctor now
 
+            //check if user is having consultation credit, if not ask to pay
+
+            // =========== DUMMY CODES===================================
+
+            var newMessageId = prevMessage.messageId + 1;
+            var message = {
+                id: newMessageId,
+                template: template.TEMPLATE_8,
+                time: new Date(),
+                userSent: false,
+                shortMessage: 'Please choose consultation plan'
+            }
+
+            prevMessage.messages.push(message);
+            prevMessage.messageId = newMessageId;
+
+            if (prevMessage.messageId > 0) {
+                return record;
+            }
+            // =========== DUMMY CODES===================================
+
             var docName = findRandomDocByDesignation(answer);
 
             var newMessageId = prevMessage.messageId + 1;
@@ -249,6 +271,7 @@ function answerSelected(userName, reqBody) {
             if (prevMessage == null || prevMessage == undefined) {
                 prevMessage = {
                     messageId: 0,
+                    consultationCredit: 0,
                     messages: [],
                     designation: findDesignation(docName)
                 };
@@ -317,6 +340,7 @@ function answerSelected(userName, reqBody) {
             if (globalMessages[docName][userName] == null || globalMessages[docName][userName] == undefined) {
                 globalMessages[docName][userName] = {
                     messageId: 0,
+                    consultationCredit: 0,
                     messages: [],
                     designation: findDesignation(userName)
                 };
@@ -374,6 +398,7 @@ function newMessage(messageJson) {
     if (globalMessages[from][to] == null || globalMessages[from][to] == undefined) {
         globalMessages[from][to] = {
             messageId: 0,
+            consultationCredit: 0,
             messages: [],
             designation: findDesignation(to)
         }
@@ -408,6 +433,7 @@ function newMessage(messageJson) {
     if (globalMessages[to][from] == null || globalMessages[to][from] == undefined) {
         globalMessages[to][from] = {
             messageId: 0,
+            consultationCredit: 0,
             messages: [],
             designation: findDesignation(from)
         }
@@ -442,10 +468,47 @@ function newMessage(messageJson) {
 }
 
 
+function consultationPackagePurchased(reqParam) {
+
+    console.log("Consultation package purchased :: ", reqParam);
+
+    var prevMessages = globalMessages[reqParam.user][userDetail.DR_ASSISTANT_NAME];
+
+    var tempMessages = prevMessages.messages;
+
+    var record = null;
+
+    for (var i = 0; i < tempMessages.length; i++) {
+        var tempMessage = tempMessages[i];
+        if (tempMessage.id === reqParam.message.id) {
+            record = tempMessage;
+            tempMessage.template = template.TEMPLATE_6;
+            tempMessage.shortMessage = "Your payment successfull";
+            tempMessage.actMessage = "You paid consultation fee of " + reqParam.message.selectedPackage.price + " for " + reqParam.message.selectedPackage.name + " consultation.";
+            tempMessage.consultationPackage = reqParam.message.selectedPackage;
+            tempMessage.consultationPayment = reqParam.payment;
+            tempMessage.oldMessage = true;
+            var credit = prevMessages.consultationCredit;
+            if (credit == null) {
+                credit = 0;
+            }
+            credit = credit + reqParam.message.selectedPackage.credit;
+            prevMessages.consultationCredit = credit;
+            break;
+        }
+    }
+
+    return record;
+
+}
+
+
+
 module.exports = {
     getMessagesForUser: getMessagesForUser,
     getMessageForUserByDoctor: getMessageForUserByDoctor,
     answerSelected: answerSelected,
     newMessage: newMessage,
-    newConsultationForUser: newConsultationForUser
+    newConsultationForUser: newConsultationForUser,
+    consultationPackagePurchased: consultationPackagePurchased
 }

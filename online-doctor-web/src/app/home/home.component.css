@@ -373,10 +373,16 @@ select {
   color: #3dea44;
   letter-spacing: 1px;
 }
-.package-container{
+
+.package-container {
   font-size: 14px;
 }
-.btn-small{
+
+.btn-small {
   font-size: 10px;
   margin-bottom: 5px;
+}
+
+.selected-button button {
+  background-color: #24658E;
 }
