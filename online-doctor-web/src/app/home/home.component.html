@@ -256,8 +256,8 @@
                         <button class="btn-small" (click)="payConsultationFee(message,p)">Select</button>
                       </div>
                     </div>
-                    <div id="paypal-checkout-btn"></div>
-                    <p class="text-message-time m-0">05 : 54 PM</p>
+                    <div id="paypal-checkout-btn" *ngIf="message.oldMessage != true "></div>
+                    <p class="text-message-time m-0">{{message.time | chatTimeIndicator}}</p>
                   </div>
                 </div>
 

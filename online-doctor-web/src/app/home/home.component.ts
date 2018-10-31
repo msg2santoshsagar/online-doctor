@@ -49,7 +49,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild("chatMessageContainer") chatMessageContainer: ElementRef;
   disableScrollDown: boolean = false;
 
-  addScript: boolean = false;
+  paypalButtonVisible: boolean = false;
   finalAmount: number = 1;
   selectedMessage;
 
@@ -121,10 +121,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     onCancel: (data, actions) => {
       console.log("Payment cancelled");
       alert("You cancelled the payment");
+      this.paypalButtonVisible = false;
     },
     onError: function (err) {
       console.log("Payment cancelled due to error ", err);
       alert("You cancelled the payment");
+      this.paypalButtonVisible = false;
     }
   };
 
@@ -303,6 +305,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   StartANewConsultation() {
     console.log("Request to start a new consultation");
+    this.paypalButtonVisible = false;
     this.webSocketService.sendMessage({
       task: 'START_NEW_CONSULTATION'
     });
@@ -438,23 +441,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   initPaypalButton(): void {
-    if (!this.addScript) {
-      this.addPaypalScript().then(() => {
-        paypal.Button.render(this.paypalConfig, '#paypal-checkout-btn');
-      })
+    if (!this.paypalButtonVisible) {
+      paypal.Button.render(this.paypalConfig, '#paypal-checkout-btn');
+      this.paypalButtonVisible = true;
     }
   }
-
-  addPaypalScript() {
-    this.addScript = true;
-    return new Promise((resolve, reject) => {
-      let scripttagElement = document.createElement('script');
-      scripttagElement.src = 'https://www.paypalobjects.com/api/checkout.js';
-      scripttagElement.onload = resolve;
-      document.body.appendChild(scripttagElement);
-    })
-  }
-
-
 
 }

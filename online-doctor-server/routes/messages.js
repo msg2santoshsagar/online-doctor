@@ -74,7 +74,31 @@ router.post('/answerSelected', function (req, res, next) {
 });
 
 router.post('/consultationPacagePurchased', function (req, res, next) {
-    var record = messageService.consultationPackagePurchased(req.body);
+    var body = req.body;
+    var userName = body.user;
+    var record = messageService.consultationPackagePurchased(body);
+    var reqBody = {
+        id: body.message.id,
+        answer: 'paid'
+    };
+    var messages = messageService.answerSelected(userName, reqBody);
+
+    wss.sendMessage(userName, {
+        task: 'NEW_MESSAGE_AVAILABLE',
+        from: userDetail.DR_ASSISTANT_NAME
+    });
+    if (messages.docName != undefined) {
+        wss.sendMessage(userName, {
+            task: 'NEW_MESSAGE_AVAILABLE',
+            from: messages.docName
+        });
+        wss.sendMessage(messages.docName, {
+            task: 'NEW_MESSAGE_AVAI(LABLE',
+            from: userName
+        });
+        delete messages.docName;
+    }
+
     res.send(record);
 });
 

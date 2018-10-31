@@ -52,7 +52,7 @@ function findDesignation(doctorName) {
 
 function findRandomDocByDesignation(designation) {
 
-    console.log("Find random doc by designation");
+    console.log("Find random doc by designation for ", designation);
 
     var doctors = userDetail.Doctors;
     var dlist = [];
@@ -224,29 +224,42 @@ function answerSelected(userName, reqBody) {
 
         }
 
-        if (record.template == template.TEMPLATE_5) {
+        if (record.template == template.TEMPLATE_5 || record.template == template.TEMPLATE_6) {
             // Final One.. Assign a doctor now
 
             //check if user is having consultation credit, if not ask to pay
 
-            // =========== DUMMY CODES===================================
+            // =============================================
 
-            var newMessageId = prevMessage.messageId + 1;
-            var message = {
-                id: newMessageId,
-                template: template.TEMPLATE_8,
-                time: new Date(),
-                userSent: false,
-                shortMessage: 'Please choose consultation plan'
+            if (prevMessage.consultationCredit == null || prevMessage.consultationCredit <= 0) {
+                var newMessageId = prevMessage.messageId + 1;
+                var message = {
+                    id: newMessageId,
+                    template: template.TEMPLATE_8,
+                    time: new Date(),
+                    userSent: false,
+                    shortMessage: 'Please choose consultation plan'
+                }
+
+                prevMessage.messages.push(message);
+                prevMessage.messageId = newMessageId;
+
+                if (prevMessage.messageId > 0) {
+                    return record;
+                }
+            }
+            // ==============================================
+
+            if (record.template == template.TEMPLATE_6) {
+                for (var i = 0; i < temp.length; i++) {
+                    if (temp[i].id == messageId - 1) {
+                        answer = temp[i].answer;
+                        break;
+                    }
+                }
             }
 
-            prevMessage.messages.push(message);
-            prevMessage.messageId = newMessageId;
-
-            if (prevMessage.messageId > 0) {
-                return record;
-            }
-            // =========== DUMMY CODES===================================
+            prevMessage.consultationCredit = prevMessage.consultationCredit - 1;
 
             var docName = findRandomDocByDesignation(answer);
 
