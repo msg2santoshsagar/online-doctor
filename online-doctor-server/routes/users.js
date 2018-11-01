@@ -1,7 +1,6 @@
 var express = require('express');
-var wss = require('./../node/websocket_server');
 var userDetail = require('./../node/user-detail');
-
+var userDao = require('./../node/dao/user.dao');
 
 var router = express.Router();
 
@@ -47,6 +46,8 @@ router.post('/login', function (req, res, next) {
     id: userName.trim(),
     userName: userName
   };
+
+  userDao.createUserEntry(userName);
 
   res.send({
     status: 'success',

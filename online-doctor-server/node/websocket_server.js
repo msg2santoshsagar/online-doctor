@@ -1,6 +1,8 @@
 var WebSocket = require('ws');
 var messageService = require('./message.service');
 var userDetail = require('./user-detail');
+var environment = require('./../environment');
+
 
 var clients = {}; //To keep the detail of users
 
@@ -72,8 +74,6 @@ function init(server) {
             try {
                 var cookies = request.headers.cookie.split("=");
                 var sessionId = cookies[1];
-                //console.log("Session Id found ", sessionId);
-                //console.log("Session store :: ", _this.sessionStore);
 
                 var actualSessionId = '';
                 for (var i = 0; i < sessionId.length; i++) {
@@ -101,17 +101,23 @@ function init(server) {
 
             } catch (e) {
                 console.log("Failed to parse session id, so rejecting :: ", e);
-                ws.close(undefined, "Session not active");
-                return;
+
+                if (environment.testMode) {
+                    console.log("Test mode enabled,  so setting user as test user");
+                    ws.appSessionId = environment.testUser;
+                    clients[environment.testUser] = ws;
+                } else {
+                    ws.close(undefined, "Session not active");
+                    return;
+                }
             }
         }
 
         ws.send('connection established');
 
-
         ws.on('message', function incoming(message) {
             // console.log("Client  :: ", ws);
-            //console.log("message received :: ", message);
+            console.log("message received :: ", message);
             //ws.send("Your message received as " + message);
             messageHandler(ws.appSessionId, message);
         });

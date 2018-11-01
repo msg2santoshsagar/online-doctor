@@ -20,9 +20,9 @@ function save(collectionName, data) {
     });
 }
 
-function findAll(collectionName) {
+function findAll(collectionName, callback) {
     db.collection(collectionName).find().toArray(function (err, results) {
-        console.log(results)
+        callback(results)
     })
 }
 

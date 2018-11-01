@@ -1,12 +1,18 @@
 var template = require('./template');
 var userDetail = require('./user-detail');
+var messageDao = require('./dao/message.dao');
+var defaultMessage = require('./default.message');
 
 var globalMessages = {};
 
-function getMessagesForUser(userName) {
-    //console.log("Curernt Messages :: ",messages);
-    console.log("Get message for user ", userName);
-    return globalMessages[userName];
+/**
+ * To load the message for user
+ * 
+ * @param {*} userName 
+ * @param {*} callback 
+ */
+function getMessagesForUser(userName, callback) {
+    messageDao.findMessageForUser(userName, callback);
 }
 
 function getMessageForUserByDoctor(userName, reqBody) {
@@ -81,62 +87,21 @@ function findRandomDocByDesignation(designation) {
 
 function newConsultationForUser(userName) {
 
-    console.log("New consultation req for user ", userName);
+    console.log("New consultation req for user : ", userName);
 
     var from = userDetail.DR_ASSISTANT_NAME;
+    var to = userName;
 
-    if (globalMessages[userName] == null) {
-        globalMessages[userName] = {};
-    }
-
-    var prevMessage = globalMessages[userName][from];
-
-    if (prevMessage == null) {
-        prevMessage = {
-            messageId: 0,
-            consultationCredit: 0,
-            messages: [],
-            designation: findDesignation(from)
-        };
-        var message = {
-            id: prevMessage.messageId + 1,
-            template: template.TEMPLATE_1,
-            time: new Date(),
-            userSent: false,
-            shortMessage: 'Your detail is safe'
+    messageDao.isMessageAvailable(from, to, function (messageAvailable) {
+        console.log("message available :: ", messageAvailable);
+        var messages = [];
+        if (!messageAvailable) {
+            messages.push(defaultMessage.getInformationSafeMessage(from, to));
         }
-        prevMessage.messages.push(message);
-        prevMessage.messageId = prevMessage.messageId + 1;
-    } else {
+        messages.push(defaultMessage.getPatientTypeSelectionMessage(from, to));
+        messageDao.saveMessage(messages);
+    })
 
-        var localMessageList = prevMessage.messages;
-
-        for (var i = localMessageList.length - 1; i >= 0; i--) {
-            var localMessage = localMessageList[i];
-            if (localMessage.oldMessage != undefined) {
-                break;
-            }
-            localMessage.oldMessage = true;
-        }
-
-    }
-
-    var newMessageId = prevMessage.messageId + 1;
-
-    var message_input = {
-        id: newMessageId,
-        template: template.TEMPLATE_2,
-        time: new Date(),
-        userSent: false,
-        shortMessage: 'Please select the answer'
-    }
-
-
-    prevMessage.messages.push(message_input);
-
-    prevMessage.messageId = newMessageId;
-
-    globalMessages[userName][from] = prevMessage;
 }
 
 function answerSelected(userName, reqBody) {

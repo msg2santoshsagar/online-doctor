@@ -1,3 +1,5 @@
 module.exports = {
-    DOCTORS: 'doctors'
+    DOCTORS: 'doctors',
+    MESSAGES: 'messages',
+    USERS: 'users'
 };

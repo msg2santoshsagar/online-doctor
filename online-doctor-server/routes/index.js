@@ -5,7 +5,6 @@ var tableNames = require('../node/table_names');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  mongoDbService.findAll(tableNames.DOCTORS);
   res.render('index', {
     title: 'Express'
   });

@@ -10,6 +10,7 @@ var wss = require('./node/websocket_server');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var messageRouter = require('./routes/messages');
+var environment = require('./environment');
 
 
 var app = express();
@@ -48,12 +49,22 @@ var sessionData = session({
 app.use(sessionData);
 
 wss.initSessionStore(sessionStore);
-// try {
-//   console.log(" checking memory store::  ");
-//   sessionData.store.get("adfa",function(){console.log("afdajfdasfadsfa")});
-// } catch (e) {
-//   console.log("Error :: ",e);
-// }
+
+//Custom Middle ware to set session if test mode enabled;
+app.use(function (req, res, next) {
+  if (environment.testMode) {
+    if (req.session == undefined) {
+      req.session = {};
+    }
+    if (req.session.appData == undefined) {
+      req.session.appData = {
+        id: environment.testUser,
+        userName: environment.testUser
+      }
+    }
+  }
+  next();
+});
 
 
 app.use('/', indexRouter);

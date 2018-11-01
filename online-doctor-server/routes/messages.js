@@ -6,18 +6,14 @@ var userDetail = require('./../node/user-detail');
 var router = express.Router();
 
 router.get('/messageList', function (req, res, next) {
+    var userName = req.session.appData.userName;
+    console.log("User name found : " + userName);
 
-    if (req.session.appData !== undefined && req.session.appData !== null) {
-        var userName = req.session.appData.userName;
-        console.log("user name found :: ", userName);
-        var messages = messageService.getMessagesForUser(userName);
-        //  console.log("Found message for ", userName, messages);
-        res.send(messages);
-        return;
+    function cb(result) {
+        res.send(result);
     }
 
-    res.send(null);
-
+    messageService.getMessagesForUser(userName, cb);
 });
 
 router.post('/messageListByUser', function (req, res, next) {
