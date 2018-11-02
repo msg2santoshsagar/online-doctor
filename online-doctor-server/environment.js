@@ -1,6 +1,6 @@
 module.exports = {
 
-    testMode: true,
+    testMode: false,
     testUser: 'santosh'
 
 };

@@ -1,10 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var mongoDbService = require('./../node/mongo_db_server');
-var tableNames = require('../node/table_names');
+
+var messageDao = require('./../node/dao/message.dao');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
+  messageDao.temp();
   res.render('index', {
     title: 'Express'
   });

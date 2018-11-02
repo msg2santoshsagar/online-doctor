@@ -17,6 +17,53 @@ MongoClient.connect(dbUrl, {
     //console.log("Connection success");
 });
 
+function getValueForNextSequence(sequenceOfName, quantity, callback) {
+
+    db.collection('counters').findOneAndUpdate({
+        _id: sequenceOfName
+    }, {
+        $inc: {
+            sequence_value: quantity
+        }
+    }, {
+        returnOriginal: false
+    }, (err, result) => {
+        callback(err, result.value.sequence_value);
+    });
+}
+
+/**
+ * To set the identifier for the objects
+ * 
+ * @param {*} dataParam 
+ * @param {*} lastNumber 
+ */
+function setIdentifier(dataParam, lastNumber) {
+
+    var idx = lastNumber - dataParam.length + 1;
+
+    for (var i = 0; i < dataParam.length; i++) {
+        var data = dataParam[i];
+        data.id = idx;
+        idx++;
+    }
+
+    return dataParam;
+}
+
+
+function saveMessagesToDb(messages, callback) {
+
+    getValueForNextSequence(tableNames.MESSAGES, messages.length, function (err, result) {
+        if (!err) {
+            db.collection(tableNames.MESSAGES).insertMany(setIdentifier(messages, result), function (err, result) {
+                if (callback !== undefined) {
+                    callback(err, result);
+                }
+            })
+        }
+    });
+}
 
 /**
  * It will save the message
@@ -27,15 +74,7 @@ MongoClient.connect(dbUrl, {
  * @param {*} createInfoMessage 
  */
 function saveMessage(messages, markPreviousMessageAsOld, callback) {
-    //console.log("Request to save message :: ", messages);
-    var insertToDb = function () {
-        db.collection(tableNames.MESSAGES).insertMany(messages, function (err, result) {
-            //console.log("data saved");
-            if (callback !== undefined) {
-                callback(result);
-            }
-        })
-    }
+
     if (markPreviousMessageAsOld) {
         // console.log("Mark previous message as old is true ");
         //query store the search condition
@@ -59,11 +98,11 @@ function saveMessage(messages, markPreviousMessageAsOld, callback) {
         //console.log("query : ", query);
         db.collection(tableNames.MESSAGES).updateMany(query, data, (err, result) => {
             //console.log("Old message true update result : ");
-            insertToDb();
+            saveMessagesToDb(messages, callback);
         });
 
     } else {
-        insertToDb();
+        saveMessagesToDb(messages, callback);
 
     }
 }
@@ -77,7 +116,7 @@ function saveMessage(messages, markPreviousMessageAsOld, callback) {
  * @param {*} callback 
  */
 function isMessageAvailable(from, to, callback) {
-    console.log("Is message available ", from, to);
+    //console.log("Is message available ", from, to);
     db.collection(tableNames.MESSAGES).find({
         from: from,
         to: to
@@ -103,5 +142,5 @@ function findMessageForUser(userName, callback) {
 module.exports = {
     saveMessage: saveMessage,
     isMessageAvailable: isMessageAvailable,
-    findMessageForUser: findMessageForUser
+    findMessageForUser: findMessageForUser,
 }

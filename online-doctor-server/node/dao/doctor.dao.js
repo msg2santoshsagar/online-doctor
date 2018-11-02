@@ -21,7 +21,6 @@ function findDesignation(userName, callback) {
         if (results.length == 0) {
             callback('patient');
         } else {
-            console.log("entry available : ", results);
             callback(results[0].designation);
         }
     });

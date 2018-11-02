@@ -50,12 +50,13 @@ export class AuthService {
   }
 
   doLogOut(redirectToLogin?: boolean) {
-    console.log("Doing logout");
+    console.log("Doing logout :: ", redirectToLogin);
     this.http.get(environment.LOGOUT_END_POINT, this.httpOptions).subscribe();
     localStorage.clear();
     this._userLoggedIn = false;
     this._userName = null;
     if (redirectToLogin == true) {
+      console.log("Redirecting to login page");
       this.router.navigate['login'];
     }
   }
