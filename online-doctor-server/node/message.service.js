@@ -59,7 +59,7 @@ function getMessageForUserByDoctor(userName, reqBody, callback) {
         lastMessageId = reqBody.lastMessageId;
     }
 
-    console.log("************************* last message id from client :: ", lastMessageId);
+    //console.log("************************* last message id from client :: ", lastMessageId);
 
     messageDao.findMessageForUserFromUser(from, userName, lastMessageId, callback);
 
@@ -75,35 +75,13 @@ function findDesignation(doctorName) {
     return "Patient";
 }
 
-function findRandomDocByDesignation(designation) {
 
-    console.log("Find random doc by designation for ", designation);
-
-    var doctors = userDetail.Doctors;
-    var dlist = [];
-    for (var i = 0; i < doctors.length; i++) {
-        if (doctors[i].designation == designation) {
-            dlist.push(doctors[i]);
-        }
-    }
-
-    //console.log("Found doctors for designation  ", designation, " and list : ", dlist);
-
-    var len = dlist.length;
-
-    var idx = Math.floor(Math.random() * len);
-
-    console.log(" ranom idx calculated as : ", idx);
-
-    if (idx >= len) {
-        idx = 0;
-    }
-
-    console.log("idx calculated as : ", idx);
-
-    return dlist[idx].name;
-}
-
+/**
+ * Create New consultation for the user
+ * 
+ * @param {*} userName 
+ * @param {*} callback 
+ */
 function newConsultationForUser(userName, callback) {
 
     //console.log("New consultation req for user : ", userName);
@@ -112,7 +90,7 @@ function newConsultationForUser(userName, callback) {
     var to = userName;
 
     messageDao.isMessageAvailable(from, to, function (messageAvailable) {
-        console.log("message available :: ", messageAvailable);
+       // console.log("message available :: ", messageAvailable);
         var messages = [];
         if (!messageAvailable) {
             messages.push(defaultMessage.getInformationSafeMessage(from, to));
@@ -123,9 +101,30 @@ function newConsultationForUser(userName, callback) {
 
 }
 
-function answerSelected(userName, reqBody) {
+function answerSelected(userName, reqBody, callback) {
 
-    var messageId = reqBody.id;
+    console.log("Answer selected for ", userName, reqBody);
+
+    messageDao.updateAnswer(reqBody.id, reqBody.answer, (err, result) => {
+
+        var currentRecord = result.value;
+
+        // Template 2 handler :: START
+        if (currentRecord.template === template.TEMPLATE_2) {
+            var nextMessage = null;
+            if (currentRecord.answer === 'self') {
+                nextMessage = defaultMessage.getPatientSymptompMessage(currentRecord.from, userName);
+            } else {
+                nextMessage = defaultMessage.getPatientNameSelectionMessage(currentRecord.from, userName);
+            }
+            //console.log("Next Message formed :: ", nextMessage);
+            messageDao.saveMessage([nextMessage], true, callback);
+
+        } // Template 2 handler :: END
+
+    });
+
+    /* var messageId = reqBody.id;
     var answer = reqBody.answer;
 
     var prevMessage = globalMessages[userName][userDetail.DR_ASSISTANT_NAME];
@@ -371,7 +370,7 @@ function answerSelected(userName, reqBody) {
 
     }
 
-    return record;
+    return record; */
 
 }
 

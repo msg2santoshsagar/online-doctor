@@ -84,15 +84,9 @@ function saveMessage(messages, markPreviousMessageAsOld, callback) {
         // console.log("Mark previous message as old is true ");
         //query store the search condition
         var query = {
-            from: {
-                $eq: messages[0].from
-            },
-            to: {
-                $eq: messages[0].to
-            },
-            oldMessage: {
-                $eq: false
-            }
+            from: messages[0].from,
+            to: messages[0].to,
+            oldMessage: false
         };
         //data stores the updated value
         var data = {
@@ -147,7 +141,7 @@ function findMessageForUser(userName, callback) {
 }
 
 function findMessageForUserFromUser(from, to, lastMessageId, callback) {
-    console.log("************************************-------------------");
+    //console.log("************************************-------------------");
     db.collection(tableNames.MESSAGES).find({
         from: from,
         to: to,
@@ -155,18 +149,39 @@ function findMessageForUserFromUser(from, to, lastMessageId, callback) {
             $gt: lastMessageId
         }
     }).toArray(function (err, results) {
-        console.log("***********************   Result found for message from user to user : ", results);
+       // console.log("***********************   Result found for message from user to user : ", results);
         if (callback !== undefined) {
             callback(err, results);
         }
     });
 }
 
-
+/**
+ * To update the answer of the given message with id
+ * 
+ * @param {*} messageId 
+ * @param {*} answer 
+ * @param {*} callback 
+ */
+function updateAnswer(messageId, answer, callback) {
+    var query = {
+        id: messageId
+    };
+    var data = {
+        $set: {
+            oldMessage: true,
+            answer: answer
+        }
+    };
+    db.collection(tableNames.MESSAGES).findOneAndUpdate(query, data, {
+        returnOriginal: false
+    }, callback);
+}
 
 module.exports = {
     saveMessage: saveMessage,
     isMessageAvailable: isMessageAvailable,
     findMessageForUser: findMessageForUser,
-    findMessageForUserFromUser: findMessageForUserFromUser
+    findMessageForUserFromUser: findMessageForUserFromUser,
+    updateAnswer: updateAnswer
 }

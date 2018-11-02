@@ -26,37 +26,28 @@ router.post('/messageListByUser', function (req, res, next) {
 
 router.post('/answerSelected', function (req, res, next) {
 
-    if (req.session.appData !== undefined && req.session.appData !== null) {
-        var userName = req.session.appData.userName;
-        console.log("user name found :: ", userName);
-        var reqBody = req.body;
-        try {
-            var messages = messageService.answerSelected(userName, reqBody);
-        } catch (e) {
-            console.log("Error :: ", e);
-        }
+    var userName = req.session.appData.userName;
+    var reqBody = req.body;
+
+    messageService.answerSelected(userName, reqBody, (err, result) => {
+        //console.log("Answer selected processed : and found result : ", result);
         wss.sendMessage(userName, {
             task: 'NEW_MESSAGE_AVAILABLE',
             from: userDetail.DR_ASSISTANT_NAME
         });
-        if (messages.docName != undefined) {
+        if (result.docName != undefined) {
             wss.sendMessage(userName, {
                 task: 'NEW_MESSAGE_AVAILABLE',
-                from: messages.docName
+                from: result.docName
             });
             wss.sendMessage(messages.docName, {
                 task: 'NEW_MESSAGE_AVAI(LABLE',
                 from: userName
             });
-            delete messages.docName;
+            delete result.docName;
         }
-
-        res.send(messages);
-        return;
-
-    }
-
-    res.send(null);
+        res.send(result);
+    });
 
 });
 
