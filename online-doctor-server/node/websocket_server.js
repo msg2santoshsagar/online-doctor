@@ -44,11 +44,13 @@ function handlerUserTyping(identity, messageJson) {
 
 function handleNewConsultation(identity, messageJson) {
     console.log("handleNewConsultation :: Input :: ", messageJson);
-    messageService.newConsultationForUser(identity);
-    sendMessage(identity, {
-        task: 'NEW_MESSAGE_AVAILABLE',
-        from: userDetail.DR_ASSISTANT_NAME
+    messageService.newConsultationForUser(identity, (err, result) => {
+        sendMessage(identity, {
+            task: 'NEW_MESSAGE_AVAILABLE',
+            from: userDetail.DR_ASSISTANT_NAME
+        });
     });
+
 }
 
 function handleNewMessage(identity, messageJson) {

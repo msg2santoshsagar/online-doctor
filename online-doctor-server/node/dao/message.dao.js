@@ -51,7 +51,12 @@ function setIdentifier(dataParam, lastNumber) {
     return dataParam;
 }
 
-
+/**
+ * Save message to database
+ * 
+ * @param {*} messages 
+ * @param {*} callback 
+ */
 function saveMessagesToDb(messages, callback) {
 
     getValueForNextSequence(tableNames.MESSAGES, messages.length, function (err, result) {
@@ -135,12 +140,33 @@ function findMessageForUser(userName, callback) {
     db.collection(tableNames.MESSAGES).find({
         to: userName
     }).toArray(function (err, results) {
-        callback(results);
+        if (callback !== undefined) {
+            callback(results);
+        }
     });
 }
+
+function findMessageForUserFromUser(from, to, lastMessageId, callback) {
+    console.log("************************************-------------------");
+    db.collection(tableNames.MESSAGES).find({
+        from: from,
+        to: to,
+        id: {
+            $gt: lastMessageId
+        }
+    }).toArray(function (err, results) {
+        console.log("***********************   Result found for message from user to user : ", results);
+        if (callback !== undefined) {
+            callback(err, results);
+        }
+    });
+}
+
+
 
 module.exports = {
     saveMessage: saveMessage,
     isMessageAvailable: isMessageAvailable,
     findMessageForUser: findMessageForUser,
+    findMessageForUserFromUser: findMessageForUserFromUser
 }

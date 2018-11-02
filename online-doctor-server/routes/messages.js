@@ -7,29 +7,20 @@ var router = express.Router();
 
 router.get('/messageList', function (req, res, next) {
     var userName = req.session.appData.userName;
-    console.log("User name found : " + userName);
-
-    function cb(result) {
+    //console.log("User name found : " + userName);
+    messageService.getMessagesForUser(userName, (result) => {
         res.send(result);
-    }
-
-    messageService.getMessagesForUser(userName, cb);
+    });
 });
 
 router.post('/messageListByUser', function (req, res, next) {
 
-    if (req.session.appData !== undefined && req.session.appData !== null) {
-        var userName = req.session.appData.userName;
-        console.log("user name found :: ", userName);
-        var reqBody = req.body;
-        var messages = messageService.getMessageForUserByDoctor(userName, reqBody);
-        //  console.log("Found message for ", userName, messages);
-        res.send(messages);
-        return;
+    var userName = req.session.appData.userName;
+    var reqBody = req.body;
 
-    }
-
-    res.send(null);
+    messageService.getMessageForUserByDoctor(userName, reqBody, (err, result) => {
+        res.send(result);
+    });
 
 });
 

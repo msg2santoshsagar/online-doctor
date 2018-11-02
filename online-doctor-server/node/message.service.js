@@ -12,7 +12,7 @@ var globalMessages = {};
  * @param {*} messageParam 
  */
 function formatMessage(messageParam) {
-    
+
     var messages = {};
 
     for (var i = 0; i < messageParam.length; i++) {
@@ -42,34 +42,26 @@ function getMessagesForUser(userName, callback) {
     });
 }
 
-function getMessageForUserByDoctor(userName, reqBody) {
+/**
+ * To get message for user by doctor
+ * if last message id is used then it will send the messages after that id.
+ * 
+ * @param {*} userName 
+ * @param {*} reqBody 
+ * @param {*} callback 
+ */
+function getMessageForUserByDoctor(userName, reqBody, callback) {
 
     var lastMessageId = 0;
-    var forUserName = reqBody.forUserName;
+    var from = reqBody.forUserName;
 
     if (reqBody.lastMessageId != null) {
         lastMessageId = reqBody.lastMessageId;
     }
 
-    console.log("last message id from client :: ", lastMessageId);
+    console.log("************************* last message id from client :: ", lastMessageId);
 
-    if (lastMessageId == 0) {
-        return globalMessages[userName][forUserName];
-    }
-
-    var messageList = [];
-
-    var temp = globalMessages[userName][forUserName].messages;
-
-    //console.log("Temps :: -- ", temp);
-
-    for (var i = 0; i < temp.length; i++) {
-        if (temp[i].id > lastMessageId) {
-            messageList.push(temp[i]);
-        }
-    }
-
-    return messageList;
+    messageDao.findMessageForUserFromUser(from, userName, lastMessageId, callback);
 
 }
 
@@ -112,7 +104,7 @@ function findRandomDocByDesignation(designation) {
     return dlist[idx].name;
 }
 
-function newConsultationForUser(userName) {
+function newConsultationForUser(userName, callback) {
 
     //console.log("New consultation req for user : ", userName);
 
@@ -126,7 +118,7 @@ function newConsultationForUser(userName) {
             messages.push(defaultMessage.getInformationSafeMessage(from, to));
         }
         messages.push(defaultMessage.getPatientTypeSelectionMessage(from, to));
-        messageDao.saveMessage(messages,true);
+        messageDao.saveMessage(messages, true, callback);
     })
 
 }

@@ -167,8 +167,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     console.log("Request to fetch the new message for user ", userName);
     var lastMessageId = 0;
 
-    if (this.globalMessages[userName] != null && this.globalMessages[userName].messageId != null) {
-      lastMessageId = this.globalMessages[userName].messageId;
+    if (this.globalMessages[userName] != null) {
+      lastMessageId = this.globalMessages[userName].messageList[this.globalMessages[userName].messageList.length - 1].id;
     }
 
     console.log("last message id :: ", lastMessageId);
@@ -181,6 +181,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.http.post(environment.MESSAGE_LIST_BY_USER_END_POINT, reqBody, this.httpOptions).subscribe(
       (res: any) => {
         console.log("Extra data found from server :: ", res);
+        if (res.length == 0) {
+          return;
+        }
         if (this.globalMessages[userName] == null) {
           this.globalMessages[userName] = res;
           this.prepareMessageList();
@@ -188,11 +191,11 @@ export class HomeComponent implements OnInit, OnDestroy {
           console.log("In else part");
 
           if (userName == this.DR_ASSISTANT_NAME) {
-            var localMessageList = this.globalMessages[userName].messages;
+            var localMessageList = this.globalMessages[userName].messageList;
 
             for (var i = localMessageList.length - 1; i >= 0; i--) {
               var localMessage = localMessageList[i];
-              if (localMessage.oldMessage != undefined) {
+              if (localMessage.oldMessage === true) {
                 break;
               }
               localMessage.oldMessage = true;
@@ -201,10 +204,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           }
 
           for (var i = 0; i < res.length; i++) {
-            this.globalMessages[userName].messages.push(res[i]);
-            if (this.globalMessages[userName].messageId < res[i].id) {
-              this.globalMessages[userName].messageId = res[i].id;
-            }
+            this.globalMessages[userName].messageList.push(res[i]);
           }
           this.updateShortMessageAndTime(userName);
         }
@@ -224,12 +224,11 @@ export class HomeComponent implements OnInit, OnDestroy {
       if (doctor.name == doctorName) {
 
         console.log("Doctor detail matched :: ", doctor);
-        console.log("Last message id :: ", this.globalMessages[doctorName].messageId);
         console.log("GLobal message for doctor :: ", this.globalMessages[doctorName]);
 
-        doctor.shortMessage = this.globalMessages[doctorName]['messages'][this.globalMessages[doctorName].messageId - 1].shortMessage;
+        doctor.shortMessage = this.globalMessages[doctorName]['messageList'][this.globalMessages[doctorName].messageList.length - 1].shortMessage;
 
-        doctor.time = this.globalMessages[doctorName]['messages'][this.globalMessages[doctorName].messageId - 1].time
+        doctor.time = this.globalMessages[doctorName]['messageList'][this.globalMessages[doctorName].messageList.length - 1].createdDate
 
         console.log("now doctor detail :: ", doctor);
       }
