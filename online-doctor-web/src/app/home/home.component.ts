@@ -279,24 +279,38 @@ export class HomeComponent implements OnInit, OnDestroy {
     )
   }
 
+  updateUserDesignation(userName) {
+    //console.log("Request to update user designation : ", userName);
+    this.http.post(environment.USER_DESIGNATION_END_POINT, { userName: userName }, this.httpOptions).subscribe(
+      (res: any) => {
+        //console.log("User Designation Result found :: ", res);
+        this.globalMessages[userName].designation = res.designation;
+      }, (err: any) => {
+        console.log("Error occured while finding designation for the user : ", userName);
+      }
+    )
+  }
+
   prepareMessageList() {
     var localDoctorList = [];
     var doctorNames = Object.keys(this.globalMessages);
     for (var i = 0; i < doctorNames.length; i++) {
       var doctorName = doctorNames[i];
-      console.log("Designation for doctor : ", doctorName, " is ", this.globalMessages[doctorName].designation);
+      //console.log("Designation for doctor : ", doctorName, " is ", this.globalMessages[doctorName].designation);
+      if (this.globalMessages[doctorName].designation == undefined) {
+        this.updateUserDesignation(doctorName);
+      }
       var doctorDetail = {
         name: doctorName,
-        designation: this.globalMessages[doctorName].designation,
-        shortMessage: this.globalMessages[doctorName]['messages'][this.globalMessages[doctorName].messageId - 1].shortMessage,
-        time: this.globalMessages[doctorName]['messages'][this.globalMessages[doctorName].messageId - 1].time
+        shortMessage: this.globalMessages[doctorName]['messageList'][this.globalMessages[doctorName].messageList.length - 1].shortMessage,
+        time: this.globalMessages[doctorName]['messageList'][this.globalMessages[doctorName].messageList.length - 1].createdDate
       }
       localDoctorList.push(doctorDetail);
     }
     this.doctorList = localDoctorList;
     if (this.doctorList.length > 0) {
       this.currentActiveDoctorName = this.doctorList[0].name;
-      this.currentActiveMessageList = this.globalMessages[this.currentActiveDoctorName].messages;
+      this.currentActiveMessageList = this.globalMessages[this.currentActiveDoctorName].messageList;
     }
     if (this.currentActiveDoctorName != this.DR_ASSISTANT_NAME) {
       this.showReplyBox = true;

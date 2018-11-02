@@ -1,6 +1,7 @@
 var express = require('express');
 var userDetail = require('./../node/user-detail');
 var userDao = require('./../node/dao/user.dao');
+var doctorDao = require('./../node/dao/doctor.dao');
 
 var router = express.Router();
 
@@ -80,6 +81,18 @@ router.get('/logout', function (req, res, next) {
   res.send({
     status: 'success',
     message: "logout success"
+  });
+
+});
+
+router.post('/designation', function (req, res, next) {
+
+  var userName = req.body.userName;
+
+  doctorDao.findDesignation(userName, function (designation) {
+    res.send({
+      designation: designation
+    });
   });
 
 });

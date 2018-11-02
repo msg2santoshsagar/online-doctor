@@ -5,6 +5,31 @@ var defaultMessage = require('./default.message');
 
 var globalMessages = {};
 
+
+/**
+ * To format the message for browser
+ * 
+ * @param {*} messageParam 
+ */
+function formatMessage(messageParam) {
+    
+    var messages = {};
+
+    for (var i = 0; i < messageParam.length; i++) {
+        param = messageParam[i];
+        if (messages[param.from] == undefined) {
+            messages[param.from] = {
+                messageList: []
+            };
+        }
+        messages[param.from].messageList.push(param);
+    }
+
+
+    return messages;
+}
+
+
 /**
  * To load the message for user
  * 
@@ -12,7 +37,9 @@ var globalMessages = {};
  * @param {*} callback 
  */
 function getMessagesForUser(userName, callback) {
-    messageDao.findMessageForUser(userName, callback);
+    messageDao.findMessageForUser(userName, function (result) {
+        callback(formatMessage(result));
+    });
 }
 
 function getMessageForUserByDoctor(userName, reqBody) {
@@ -87,7 +114,7 @@ function findRandomDocByDesignation(designation) {
 
 function newConsultationForUser(userName) {
 
-    console.log("New consultation req for user : ", userName);
+    //console.log("New consultation req for user : ", userName);
 
     var from = userDetail.DR_ASSISTANT_NAME;
     var to = userName;
@@ -99,7 +126,7 @@ function newConsultationForUser(userName) {
             messages.push(defaultMessage.getInformationSafeMessage(from, to));
         }
         messages.push(defaultMessage.getPatientTypeSelectionMessage(from, to));
-        messageDao.saveMessage(messages);
+        messageDao.saveMessage(messages,true);
     })
 
 }

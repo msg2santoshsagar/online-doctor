@@ -8,6 +8,7 @@ const BASE_URL = "http://localhost:3000";
 export const environment = {
   production: false,
   CURRENT_USER_END_POINT: BASE_URL + "/api/users/currentUser",
+  USER_DESIGNATION_END_POINT: BASE_URL + "/api/users/designation",
   LOGIN_END_POINT: BASE_URL + "/api/users/login",
   LOGOUT_END_POINT: BASE_URL + "/api/users/logout",
   MESSAGE_LIST_END_POINT: BASE_URL + "/api/messages/messageList",

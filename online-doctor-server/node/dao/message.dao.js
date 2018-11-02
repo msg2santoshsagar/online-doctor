@@ -26,11 +26,46 @@ MongoClient.connect(dbUrl, {
  * @param {*} message 
  * @param {*} createInfoMessage 
  */
-function saveMessage(messages, callback) {
-    console.log("Request to save message :: ", messages);
-    db.collection(tableNames.MESSAGES).insertMany(messages, function (err, result) {
-        console.log("data saved");
-    })
+function saveMessage(messages, markPreviousMessageAsOld, callback) {
+    //console.log("Request to save message :: ", messages);
+    var insertToDb = function () {
+        db.collection(tableNames.MESSAGES).insertMany(messages, function (err, result) {
+            //console.log("data saved");
+            if (callback !== undefined) {
+                callback(result);
+            }
+        })
+    }
+    if (markPreviousMessageAsOld) {
+        // console.log("Mark previous message as old is true ");
+        //query store the search condition
+        var query = {
+            from: {
+                $eq: messages[0].from
+            },
+            to: {
+                $eq: messages[0].to
+            },
+            oldMessage: {
+                $eq: false
+            }
+        };
+        //data stores the updated value
+        var data = {
+            $set: {
+                oldMessage: true
+            }
+        };
+        //console.log("query : ", query);
+        db.collection(tableNames.MESSAGES).updateMany(query, data, (err, result) => {
+            //console.log("Old message true update result : ");
+            insertToDb();
+        });
+
+    } else {
+        insertToDb();
+
+    }
 }
 
 /**

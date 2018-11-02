@@ -36,5 +36,5 @@ function createUserEntry(userName) {
 }
 
 module.exports = {
-    createUserEntry: createUserEntry
+    createUserEntry: createUserEntry,
 }

@@ -8,7 +8,8 @@ module.exports = {
             to: to,
             template: template.TEMPLATE_1,
             createdDate: new Date(),
-            shortMessage: 'Your detail is safe'
+            shortMessage: 'Your detail is safe',
+            oldMessage: false
         };
     },
 
@@ -18,7 +19,8 @@ module.exports = {
             to: to,
             template: template.TEMPLATE_2,
             createdDate: new Date(),
-            shortMessage: 'Please select the answer'
+            shortMessage: 'Please select the answer',
+            oldMessage: false
         };
     }
 
