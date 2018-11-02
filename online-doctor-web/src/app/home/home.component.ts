@@ -17,7 +17,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   doctorList: any = []; // Doctor list
   globalMessages: any = {}; // Map of doctor and message
   currentActiveMessageList: any = []; // Current Acitve message list
-  currentActiveDoctorName: string = 'Start New consultation'; // Current Acitve message list
+  defaultDocterName = 'Start New consultation';
+  currentActiveDoctorName: string = this.defaultDocterName; // Current Acitve message list
 
   showReplyBox: boolean = false;
   DR_ASSISTANT_NAME: string = 'Dr. Assistant';
@@ -185,7 +186,9 @@ export class HomeComponent implements OnInit, OnDestroy {
           return;
         }
         if (this.globalMessages[userName] == null) {
-          this.globalMessages[userName] = res;
+          this.globalMessages[userName] = {
+            messageList: res
+          };
           this.prepareMessageList();
         } else {
           console.log("In else part");
@@ -311,7 +314,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.currentActiveDoctorName = this.doctorList[0].name;
       this.currentActiveMessageList = this.globalMessages[this.currentActiveDoctorName].messageList;
     }
-    if (this.currentActiveDoctorName != this.DR_ASSISTANT_NAME) {
+    console.log("Current active doctor name :: ", this.currentActiveDoctorName);
+    if (this.currentActiveDoctorName != this.defaultDocterName && this.currentActiveDoctorName != this.DR_ASSISTANT_NAME) {
       this.showReplyBox = true;
     }
   }

@@ -66,6 +66,29 @@ app.use(function (req, res, next) {
   next();
 });
 
+//Custom middleware to reject the request which is not authorized
+app.use(function (req, res, next) {
+  // console.log("Request *********** \n : ", req.originalUrl);
+  var unauthenticated_path_list = {
+    '/api/users/login': true,
+    '/api/users/currentUser': true,
+    '/api/users/logout': true,
+  };
+  if (unauthenticated_path_list[req.originalUrl] != undefined) {
+    //These all api don't need authentication;
+    next();
+  } else {
+    if (req.session.appData == undefined) {
+      res.send({
+        status: 'LOGGED_OFF',
+        reason: 'Full Authentication is required to access this api'
+      })
+    } else {
+      //Go for next
+      next();
+    }
+  }
+});
 
 app.use('/', indexRouter);
 app.use('/api/users', usersRouter);

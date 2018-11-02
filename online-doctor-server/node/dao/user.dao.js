@@ -25,6 +25,10 @@ function createUserEntry(userName) {
     db.collection(tableNames.USERS).find({
         userName: userName
     }).toArray(function (err, results) {
+        if (err) {
+            console.log("Error occured while checking user entry : ", err);
+            return;
+        }
         if (results.length == 0) {
             db.collection(tableNames.USERS).insertOne({
                 userName: userName,
