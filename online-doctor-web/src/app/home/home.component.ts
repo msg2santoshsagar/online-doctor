@@ -355,7 +355,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 
   private scrollToBottom(): void {
-    //console.log("Scroll to bottom :: ", this.disableScrollDown);
+    console.log("Scroll to bottom disabled :: ", this.disableScrollDown);
     if (this.disableScrollDown) {
       return
     }

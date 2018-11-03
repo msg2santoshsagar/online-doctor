@@ -39,6 +39,22 @@ function createUserEntry(userName) {
     });
 }
 
+function findConsultationCredit(userName, callback) {
+    console.log("findConsultationCredit : userName : ", userName);
+    db.collection(tableNames.USERS).find({
+        userName: userName
+    }).toArray(function (err, results) {
+        if (results.length > 0) {
+            //console.log("Result found : ", results);
+            if (callback !== undefined) {
+                callback(err, results[0].consultationCredit);
+            }
+        }
+    });
+}
+
+
 module.exports = {
     createUserEntry: createUserEntry,
+    findConsultationCredit: findConsultationCredit
 }

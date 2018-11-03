@@ -1,6 +1,7 @@
 var template = require('./template');
 var userDetail = require('./user-detail');
 var messageDao = require('./dao/message.dao');
+var userDao = require('./dao/user.dao');
 var defaultMessage = require('./default.message');
 
 var globalMessages = {};
@@ -90,7 +91,7 @@ function newConsultationForUser(userName, callback) {
     var to = userName;
 
     messageDao.isMessageAvailable(from, to, function (messageAvailable) {
-       // console.log("message available :: ", messageAvailable);
+        // console.log("message available :: ", messageAvailable);
         var messages = [];
         if (!messageAvailable) {
             messages.push(defaultMessage.getInformationSafeMessage(from, to));
@@ -121,6 +122,38 @@ function answerSelected(userName, reqBody, callback) {
             messageDao.saveMessage([nextMessage], true, callback);
 
         } // Template 2 handler :: END
+
+        // Template 3 handler :: START
+        if (currentRecord.template === template.TEMPLATE_3) {
+            var nextMessage = defaultMessage.getPatientSymptompMessage(currentRecord.from, userName);
+            //console.log("Next Message formed :: ", nextMessage);
+            messageDao.saveMessage([nextMessage], true, callback);
+        } // Template 3 handler :: END
+
+        // Template 4 handler :: START
+        if (currentRecord.template === template.TEMPLATE_4) {
+            var nextMessage = defaultMessage.getDoctorTypeSelectionMessage(currentRecord.from, userName);
+            //console.log("Next Message formed :: ", nextMessage);
+            messageDao.saveMessage([nextMessage], true, callback);
+        } // Template 4 handler :: END
+
+        // Template 5 handler :: START
+        if (currentRecord.template === template.TEMPLATE_5) {
+            console.log("Current template is 5");
+            userDao.findConsultationCredit(userName, (err, result) => {
+                console.log("Consultation credit found : ", result);
+                if (result <= 0) {
+                    var nextMessage = defaultMessage.getPackageSelectionMessage(currentRecord.from, userName);
+                    //console.log("Next Message formed :: ", nextMessage);
+                    messageDao.saveMessage([nextMessage], true, callback);
+                } else {
+                    console.log("User is already having positive credit, so assign the doctor");
+                }
+            });
+
+        } // Template 5 handler :: END
+
+
 
     });
 

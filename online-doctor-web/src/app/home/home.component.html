@@ -186,7 +186,7 @@
                         <option>Paediatrician</option>
                         <option>cardiologist</option>
                       </select>
-                      <button (click)="!message.oldMessage && OnAnswerSelected(message)">SUBMIT</button>
+                      <button (click)="!message.oldMessage1 && OnAnswerSelected(message)">SUBMIT</button>
                     </div>
                     <p class="text-message-time m-0">{{message.createdDate | chatTimeIndicator}}</p>
                   </div>
@@ -200,47 +200,7 @@
               </div>
             </div>
 
-            <div class="col-md-12 p-0" *ngIf=" message.template == 'TEMPLATE_6' ">
-              <div class="row m-0">
-                <div class="col-md-2">
-                  <p class="d-none">To take some space</p>
-                </div>
-                <div class="col-md-9 p-0">
-                  <div class="text-message whitespace-preline">{{message.actMessage | newlineHtml}}
-                    <br />
-                    <p class="text-message-time m-0">{{message.createdDate | chatTimeIndicator}}</p>
-                  </div>
-                </div>
-
-                <div class="col-sm-1 col-xs-1 p-0">
-                  <div class="avatar-icon-sm">
-                    <img src="./../../assets/images/docter_color.png">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-            <div class="col-md-12 p-0" *ngIf=" message.template == 'TEMPLATE_7' ">
-
-              <div class="row m-0">
-                <div class="col-sm-1 col-xs-1 p-0">
-                  <div class="avatar-icon-sm">
-                    <img src="./../../assets/images/docter_color.png">
-                  </div>
-                </div>
-
-                <div class="col-md-9 p-0">
-                  <div class="text-message whitespace-preline">{{message.actMessage | newlineHtml}}
-                    <br />
-                    <p class="text-message-time m-0">{{message.createdDate | chatTimeIndicator}}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-            <div class="col-md-12 p-0" *ngIf="message.template == 'TEMPLATE_8' " [ngClass]="{'disabled-input': message.oldMessage}">
+            <div class="col-md-12 p-0" *ngIf="message.template == 'TEMPLATE_6' " [ngClass]="{'disabled-input': message.oldMessage}">
               <div class="row m-0">
                 <div class="col-md-6">
                   <p class="d-none">To take some space</p>
@@ -268,6 +228,48 @@
                 </div>
               </div>
             </div>
+
+            <div class="col-md-12 p-0" *ngIf=" message.template == 'TEMPLATE_7' ">
+              <div class="row m-0">
+                <div class="col-md-2">
+                  <p class="d-none">To take some space</p>
+                </div>
+                <div class="col-md-9 p-0">
+                  <div class="text-message whitespace-preline">{{message.actMessage | newlineHtml}}
+                    <br />
+                    <p class="text-message-time m-0">{{message.createdDate | chatTimeIndicator}}</p>
+                  </div>
+                </div>
+
+                <div class="col-sm-1 col-xs-1 p-0">
+                  <div class="avatar-icon-sm">
+                    <img src="./../../assets/images/docter_color.png">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-12 p-0" *ngIf=" message.template == 'TEMPLATE_8' ">
+
+              <div class="row m-0">
+                <div class="col-sm-1 col-xs-1 p-0">
+                  <div class="avatar-icon-sm">
+                    <img src="./../../assets/images/docter_color.png">
+                  </div>
+                </div>
+
+                <div class="col-md-9 p-0">
+                  <div class="text-message whitespace-preline">{{message.actMessage | newlineHtml}}
+                    <br />
+                    <p class="text-message-time m-0">{{message.createdDate | chatTimeIndicator}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
 
 
 
