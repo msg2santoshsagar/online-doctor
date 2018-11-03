@@ -1,6 +1,6 @@
 var express = require('express');
 var wss = require('./../node/websocket_server');
-var messageService = require('../node/message.service11');
+var messageService = require('../node/message.service');
 var userDetail = require('./../node/user-detail');
 
 var router = express.Router();

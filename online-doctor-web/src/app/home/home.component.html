@@ -186,7 +186,7 @@
                         <option>Paediatrician</option>
                         <option>cardiologist</option>
                       </select>
-                      <button (click)="!message.oldMessage1 && OnAnswerSelected(message)">SUBMIT</button>
+                      <button (click)="!message.oldMessage && OnAnswerSelected(message)">SUBMIT</button>
                     </div>
                     <p class="text-message-time m-0">{{message.createdDate | chatTimeIndicator}}</p>
                   </div>
