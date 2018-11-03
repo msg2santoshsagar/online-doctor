@@ -213,7 +213,7 @@
                         {{p.name}} time at {{p.price}}
                       </div>
                       <div class="col-md-4 message-button-group" [ngClass]="{'selected-button':  message.selectedPackage?.id === p.id }">
-                        <button class="btn-small" (click)="payConsultationFee(message,p)">Select</button>
+                        <button class="btn-small" (click)="!message.oldMessage && payConsultationFee(message,p)">Select</button>
                       </div>
                     </div>
                     <div id="paypal-checkout-btn" *ngIf="message.oldMessage != true "></div>

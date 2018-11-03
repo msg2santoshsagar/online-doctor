@@ -19,7 +19,7 @@ MongoClient.connect(dbUrl, {
 
 function getValueForNextSequence(sequenceOfName, quantity, callback) {
 
-    db.collection('counters').findOneAndUpdate({
+    db.collection(tableNames.COUNTERS).findOneAndUpdate({
         _id: sequenceOfName
     }, {
         $inc: {
@@ -149,7 +149,7 @@ function findMessageForUserFromUser(from, to, lastMessageId, callback) {
             $gt: lastMessageId
         }
     }).toArray(function (err, results) {
-       // console.log("***********************   Result found for message from user to user : ", results);
+        // console.log("***********************   Result found for message from user to user : ", results);
         if (callback !== undefined) {
             callback(err, results);
         }

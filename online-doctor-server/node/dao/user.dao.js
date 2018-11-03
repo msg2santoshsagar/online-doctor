@@ -1,12 +1,10 @@
 const MongoClient = require('mongodb').MongoClient
 const tableNames = require('./../table_names');
-
-
-var dbUrl = 'mongodb://test:test1234@ds245523.mlab.com:45523/online_doctor';
+const environment = require('./../../environment');
 
 var db;
 
-MongoClient.connect(dbUrl, {
+MongoClient.connect(environment.dbUrl, {
     useNewUrlParser: true
 }, (err, client) => {
     if (err) return console.log(err)
@@ -53,8 +51,29 @@ function findConsultationCredit(userName, callback) {
     });
 }
 
+/**
+ * To incrase the consultation credit for the user
+ * 
+ * @param {*} userName 
+ * @param {*} credit 
+ * @param {*} callback 
+ */
+function increaseConsultationCredit(userName, credit, callback) {
+    //console.log("Request to increase consultation credit : ", userName, credit);
+    db.collection(tableNames.USERS).findOneAndUpdate({
+        userName: userName
+    }, {
+        $inc: {
+            consultationCredit: credit
+        }
+    }, {
+        returnOriginal: false
+    }, callback);
+}
+
 
 module.exports = {
     createUserEntry: createUserEntry,
-    findConsultationCredit: findConsultationCredit
+    findConsultationCredit: findConsultationCredit,
+    increaseConsultationCredit: increaseConsultationCredit
 }

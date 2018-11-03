@@ -1,5 +1,7 @@
 module.exports = {
+    COUNTERS: 'counters',
     DOCTORS: 'doctors',
     MESSAGES: 'messages',
-    USERS: 'users'
+    USERS: 'users',
+    PAYMENTS: 'payments'
 };

@@ -2,6 +2,7 @@ var template = require('./template');
 var userDetail = require('./user-detail');
 var messageDao = require('./dao/message.dao');
 var userDao = require('./dao/user.dao');
+var paymentDao = require('./dao/payments.dao');
 var defaultMessage = require('./default.message');
 
 var globalMessages = {};
@@ -496,38 +497,42 @@ function newMessage(messageJson) {
 
 }
 
+function assignDoctorToUser(userName, doctorType, callback) {
+    console.log("assignDoctorToUser : userName : ", userName);
+    console.log("assignDoctorToUser : doctorType : ", doctorType);
 
-function consultationPackagePurchased(reqParam) {
+}
 
-    console.log("Consultation package purchased :: ", reqParam);
 
-    var prevMessages = globalMessages[reqParam.user][userDetail.DR_ASSISTANT_NAME];
+function consultationPackagePurchased(userName, reqParam, callback) {
 
-    var tempMessages = prevMessages.messages;
+    var messageId = reqParam.message.id;
+    var answer = reqParam.message.selectedPackage;
+    var paymentData = reqParam.payment;
 
-    var record = null;
+    messageDao.updateAnswer(messageId, answer, (err, result) => {
 
-    for (var i = 0; i < tempMessages.length; i++) {
-        var tempMessage = tempMessages[i];
-        if (tempMessage.id === reqParam.message.id) {
-            record = tempMessage;
-            tempMessage.template = template.TEMPLATE_6;
-            tempMessage.shortMessage = "Your payment successfull";
-            tempMessage.actMessage = "You paid consultation fee of " + reqParam.message.selectedPackage.price + " for " + reqParam.message.selectedPackage.name + " consultation.";
-            tempMessage.consultationPackage = reqParam.message.selectedPackage;
-            tempMessage.consultationPayment = reqParam.payment;
-            tempMessage.oldMessage = true;
-            var credit = prevMessages.consultationCredit;
-            if (credit == null) {
-                credit = 0;
-            }
-            credit = credit + reqParam.message.selectedPackage.credit;
-            prevMessages.consultationCredit = credit;
-            break;
-        }
-    }
+        var currentRecord = result.value;
 
-    return record;
+        paymentData.messageId = currentRecord.id;
+        paymentData.userName = userName;
+
+        paymentDao.savePayment(paymentData, (err, result) => {
+            console.log("Payment data saved");
+
+            userDao.increaseConsultationCredit(userName, answer.credit, (err, result) => {
+                console.log("Credit increased");
+                var nextMessage = defaultMessage.getPaymentSuccessFullMessage(currentRecord.from, userName, answer.price, answer.credit);
+                messageDao.saveMessage([nextMessage], true, (err, result) => {
+                    assignDoctorToUser(userName, null, callback);
+                });
+
+            });
+
+        });
+
+
+    });
 
 }
 

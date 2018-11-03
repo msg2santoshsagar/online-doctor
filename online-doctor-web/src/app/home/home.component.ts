@@ -91,28 +91,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         //Do something when payment is successful.
         console.log("Payment successfull for :: ", payment);
         let request = {
-          user: this.authService.getUsername(),
           message: this.selectedMessage,
           payment: payment
         }
         this.http.post(environment.CONSULATATION_PACKAGE_PURCHASED_END_POINT, request, this.httpOptions).subscribe(
           (response: any) => {
             console.log("Consultation fee purchased :: ", response);
-
-            var messages = this.globalMessages[this.DR_ASSISTANT_NAME];
-
-            var messageList = messages.messages;
-
-            for (var i = 0; i < messageList.length; i++) {
-
-              if (messageList[i].id === response.id) {
-                messageList[i] = response;
-                break;
-              }
-
-            }
-
-
+            this.selectedMessage.oldMessage = true;
           }, (err: any) => {
             console.log("Error occured while buying consultation fee package : ", err);
           }

@@ -70,5 +70,18 @@ module.exports = {
         };
     },
 
+    getPaymentSuccessFullMessage: function (from, to, price, credit) {
+        return {
+            from: from,
+            to: to,
+            template: template.TEMPLATE_7,
+            createdDate: new Date(),
+            shortMessage: "Your payment successfull",
+            actMessage: "You paid consultation fee of " + price + " for " + credit + " consultation.",
+            oldMessage: false
+        };
+    },
+
+
 
 }

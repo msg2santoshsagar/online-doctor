@@ -41,7 +41,7 @@ router.post('/answerSelected', function (req, res, next) {
                 from: result.docName
             });
             wss.sendMessage(messages.docName, {
-                task: 'NEW_MESSAGE_AVAI(LABLE',
+                task: 'NEW_MESSAGE_AVAILABLE',
                 from: userName
             });
             delete result.docName;
@@ -52,7 +52,15 @@ router.post('/answerSelected', function (req, res, next) {
 });
 
 router.post('/consultationPacagePurchased', function (req, res, next) {
-    var body = req.body;
+
+    var userName = req.session.appData.userName;
+    var reqBody = req.body;
+
+    messageService.consultationPackagePurchased(userName, reqBody, (err, result) => {
+        console.log("Consultation package purchase successfull with : ", result);
+    })
+
+    /* var body = req.body;
     var userName = body.user;
     var record = messageService.consultationPackagePurchased(body);
     var reqBody = {
@@ -77,7 +85,7 @@ router.post('/consultationPacagePurchased', function (req, res, next) {
         delete messages.docName;
     }
 
-    res.send(record);
+    res.send(record); */
 });
 
 
