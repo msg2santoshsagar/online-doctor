@@ -20,7 +20,7 @@
 
         <div class="profile-lists">
 
-          <div class="row sideBar-body" *ngFor="let doctor of doctorList" [ngClass]="{activeDoctor: doctor.name == currentActiveDoctorName  }"
+          <div class="row sideBar-body" *ngFor="let doctor of doctorList | orderBy:'time':false" [ngClass]="{activeDoctor: doctor.name == currentActiveDoctorName  }"
             (click)="OnSelectDoctor(doctor)">
             <div class="col-sm-1 col-1 sideBar-avatar">
               <div class="avatar-icon">

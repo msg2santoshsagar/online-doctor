@@ -11,6 +11,7 @@ import { ChatTimeIndicatorPipe } from './pipes/chat-time-indicator.pipe';
 import { NewlineHtmlPipe } from './pipes/newline-html.pipe';
 import { ProfilePicPipe } from './pipes/profile-pic.pipe';
 import { CustomHttpInterceptor } from './interceptors/custom-http.interceptor';
+import { OrderByPipe } from './pipes/order-by.pipe';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { CustomHttpInterceptor } from './interceptors/custom-http.interceptor';
     LoginComponent,
     ChatTimeIndicatorPipe,
     NewlineHtmlPipe,
-    ProfilePicPipe
+    ProfilePicPipe,
+    OrderByPipe
   ],
   imports: [
     BrowserModule,
