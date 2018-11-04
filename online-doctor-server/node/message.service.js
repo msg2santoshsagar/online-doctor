@@ -40,7 +40,10 @@ function formatMessage(messageParam) {
  * @param {*} callback 
  */
 function getMessagesForUser(userName, callback) {
-    messageDao.findMessageForUser(userName, function (result) {
+    messageDao.findMessageForUser(userName, (err, result) => {
+        if (err) {
+            console.log("Error occured in fetching message for user : ", user, " and error is \n", err);
+        }
         callback(formatMessage(result));
     });
 }
@@ -67,17 +70,6 @@ function getMessageForUserByDoctor(userName, reqBody, callback) {
     messageDao.findMessageForUserFromUser(from, userName, lastMessageId, callback);
 
 }
-
-function findDesignation(doctorName) {
-    var doctors = userDetail.Doctors;
-    for (var i = 0; i < doctors.length; i++) {
-        if (doctors[i].name == doctorName) {
-            return doctors[i].designation;
-        }
-    }
-    return "Patient";
-}
-
 
 /**
  * Create New consultation for the user
@@ -163,343 +155,19 @@ function answerSelected(userName, reqBody, callback) {
 
 
     });
-
-    /* var messageId = reqBody.id;
-    var answer = reqBody.answer;
-
-    var prevMessage = globalMessages[userName][userDetail.DR_ASSISTANT_NAME];
-    var temp = prevMessage.messages;
-
-    var record = null;
-
-    for (var i = 0; i < temp.length; i++) {
-        if (temp[i].id == messageId) {
-            temp[i].oldMessage = true;
-            temp[i].answer = answer;
-            record = temp[i];
-            break;
-        }
-    }
-
-    if (record != null) {
-
-        if (record.template == template.TEMPLATE_2) {
-
-            if (answer == 'self') {
-                var newMessageId = prevMessage.messageId + 1;
-                var message = {
-                    id: newMessageId,
-                    template: template.TEMPLATE_4,
-                    time: new Date(),
-                    userSent: false,
-                    shortMessage: 'Please describe the symptomps'
-                }
-                prevMessage.messages.push(message);
-                prevMessage.messageId = newMessageId;
-
-            } else {
-
-                var newMessageId = prevMessage.messageId + 1;
-                var message = {
-                    id: newMessageId,
-                    template: template.TEMPLATE_3,
-                    time: new Date(),
-                    userSent: false,
-                    shortMessage: 'Please Enter the patient name'
-                }
-                prevMessage.messages.push(message);
-                prevMessage.messageId = newMessageId;
-
-            }
-
-        }
-
-
-        if (record.template == template.TEMPLATE_3) {
-
-            var newMessageId = prevMessage.messageId + 1;
-            var message = {
-                id: newMessageId,
-                template: template.TEMPLATE_4,
-                time: new Date(),
-                userSent: false,
-                shortMessage: 'Please describe the symptomps'
-            }
-
-            prevMessage.messages.push(message);
-            prevMessage.messageId = newMessageId;
-
-        }
-
-        if (record.template == template.TEMPLATE_4) {
-
-            var newMessageId = prevMessage.messageId + 1;
-            var message = {
-                id: newMessageId,
-                template: template.TEMPLATE_5,
-                time: new Date(),
-                userSent: false,
-                shortMessage: 'Please select the doctor type'
-            }
-
-            prevMessage.messages.push(message);
-            prevMessage.messageId = newMessageId;
-
-        }
-
-        if (record.template == template.TEMPLATE_5 || record.template == template.TEMPLATE_6) {
-            // Final One.. Assign a doctor now
-
-            //check if user is having consultation credit, if not ask to pay
-
-            // =============================================
-
-            if (prevMessage.consultationCredit == null || prevMessage.consultationCredit <= 0) {
-                var newMessageId = prevMessage.messageId + 1;
-                var message = {
-                    id: newMessageId,
-                    template: template.TEMPLATE_8,
-                    time: new Date(),
-                    userSent: false,
-                    shortMessage: 'Please choose consultation plan'
-                }
-
-                prevMessage.messages.push(message);
-                prevMessage.messageId = newMessageId;
-
-                if (prevMessage.messageId > 0) {
-                    return record;
-                }
-            }
-            // ==============================================
-
-            if (record.template == template.TEMPLATE_6) {
-                for (var i = 0; i < temp.length; i++) {
-                    if (temp[i].id == messageId - 1) {
-                        answer = temp[i].answer;
-                        break;
-                    }
-                }
-            }
-
-            prevMessage.consultationCredit = prevMessage.consultationCredit - 1;
-
-            var docName = findRandomDocByDesignation(answer);
-
-            var newMessageId = prevMessage.messageId + 1;
-            var message = {
-                id: newMessageId,
-                template: template.TEMPLATE_6,
-                time: new Date(),
-                userSent: false,
-                shortMessage: 'Doctor will contact you shortly',
-                actMessage: docName + ' will assist you in this matter. we will contact you soon.'
-            }
-
-            prevMessage.messages.push(message);
-            prevMessage.messageId = newMessageId;
-
-            //Add a new message for new doctor
-            prevMessage = globalMessages[userName][docName];
-
-            record.docName = docName;
-
-            if (prevMessage == null || prevMessage == undefined) {
-                prevMessage = {
-                    messageId: 0,
-                    consultationCredit: 0,
-                    messages: [],
-                    designation: findDesignation(docName)
-                };
-                globalMessages[userName][docName] = prevMessage;
-            }
-
-            var newMessageId = prevMessage.messageId + 1;
-            if (newMessageId == 1) {
-                var message = {
-                    id: newMessageId,
-                    template: template.TEMPLATE_1,
-                    time: new Date(),
-                    userSent: false,
-                    shortMessage: 'Your detail is safe'
-                }
-                prevMessage.messages.push(message);
-                newMessageId = newMessageId + 1;
-            }
-
-            var message_input = {
-                id: newMessageId,
-                template: template.TEMPLATE_6,
-                time: new Date(),
-                userSent: false,
-                shortMessage: 'Hello ' + userName + ", I am " + docName + ". Please tell me how may I help you",
-                actMessage: 'Hello ' + userName + ", I am " + docName + ". Please tell me how may I help you"
-            }
-
-
-            prevMessage.messages.push(message_input);
-
-            prevMessage.messageId = newMessageId;
-
-
-            //Prepare the message for doctor
-            prevMessage = globalMessages[userName][userDetail.DR_ASSISTANT_NAME];
-            messageId = prevMessage.messageId;
-
-            console.log("New message id ::: now will find the detail :: ", messageId);
-
-            var patientDetail = [];
-            patientDetail[0] = "Hello " + docName + ", Please attend the below patient.";
-            patientDetail[2] = "Name : " + userName;
-            for (var i = messageId - 1; i >= 0; i--) {
-                var tmpMsg = prevMessage.messages[i];
-                // console.log("TEMPLATE : ", tmpMsg.template);
-                if (tmpMsg.template == template.TEMPLATE_4) {
-                    patientDetail[3] = "Symptomps : " + tmpMsg.answer;
-                }
-                if (tmpMsg.template == template.TEMPLATE_3) {
-                    patientDetail[2] = "For : " + tmpMsg.answer;
-                }
-                if (tmpMsg.template == template.TEMPLATE_2) {
-                    patientDetail[1] = "For : " + tmpMsg.answer;
-                    break;
-                }
-            }
-
-            patientDetail = patientDetail.join("\n");
-            //console.log("Patient detail :: ",patientDetail);
-
-            // Prepare message for doctor 
-            if (globalMessages[docName] == null || globalMessages[docName] == undefined) {
-                globalMessages[docName] = {};
-            }
-            if (globalMessages[docName][userName] == null || globalMessages[docName][userName] == undefined) {
-                globalMessages[docName][userName] = {
-                    messageId: 0,
-                    consultationCredit: 0,
-                    messages: [],
-                    designation: findDesignation(userName)
-                };
-                var infoMessage = {
-                    id: globalMessages[docName][userName].messageId + 1,
-                    template: template.TEMPLATE_1,
-                    time: new Date(),
-                    userSent: false,
-                    shortMessage: 'Your detail is safe'
-                }
-                globalMessages[docName][userName].messages.push(infoMessage);
-                globalMessages[docName][userName].messageId = globalMessages[docName][userName].messageId + 1;
-
-            }
-            prevMessage = globalMessages[docName][userName];
-
-            var tMsg = {
-                id: prevMessage.messageId + 1,
-                template: template.TEMPLATE_6,
-                time: new Date(),
-                userSent: false,
-                shortMessage: patientDetail,
-                actMessage: patientDetail
-            }
-
-            prevMessage.messages.push(tMsg);
-            prevMessage.messageId = prevMessage.messageId + 1;
-
-
-        }
-
-    }
-
-    return record; */
-
 }
 
-function newMessage(messageJson) {
+function newMessage(messageJson, callback) {
     console.log("new message for process : ", messageJson);
 
     var from = messageJson.from;
     var to = messageJson.to;
     var msg = messageJson.msg;
-    var time = new Date();
 
-    /* console.log("From  : ", from);
-    console.log("to  : ", to);
-    console.log("msg  : ", msg);
-    console.log("time  : ", time); */
+    var nextMessageForSender = defaultMessage.getNormalMessageForLeftSide(to, from, msg);
+    var nextMessageForReceiver = defaultMessage.getNormalMessageForRightSide(from, to, msg);
 
-    if (globalMessages[from] == null || globalMessages[from] == undefined) {
-        globalMessages[from] = {};
-    }
-
-    if (globalMessages[from][to] == null || globalMessages[from][to] == undefined) {
-        globalMessages[from][to] = {
-            messageId: 0,
-            consultationCredit: 0,
-            messages: [],
-            designation: findDesignation(to)
-        }
-        var infoMessage = {
-            id: globalMessages[from][to].messageId + 1,
-            template: template.TEMPLATE_1,
-            time: time,
-            userSent: false,
-            shortMessage: 'Your detail is safe'
-        }
-        globalMessages[from][to].messages.push(infoMessage);
-        globalMessages[from][to].messageId = globalMessages[from][to].messageId + 1;
-    }
-
-    var fromMessages = globalMessages[from][to];
-    var newMessageId = fromMessages.messageId + 1;
-    var fMsg = {
-        id: newMessageId,
-        template: template.TEMPLATE_7,
-        time: time,
-        userSent: false,
-        shortMessage: msg,
-        actMessage: msg
-    }
-    globalMessages[from][to].messages.push(fMsg);
-    globalMessages[from][to].messageId = globalMessages[from][to].messageId + 1;
-
-    if (globalMessages[to] == null || globalMessages[to] == undefined) {
-        globalMessages[to] = {};
-    }
-
-    if (globalMessages[to][from] == null || globalMessages[to][from] == undefined) {
-        globalMessages[to][from] = {
-            messageId: 0,
-            consultationCredit: 0,
-            messages: [],
-            designation: findDesignation(from)
-        }
-        var infoMessage = {
-            id: globalMessages[to][from].messageId + 1,
-            template: template.TEMPLATE_1,
-            time: time,
-            userSent: false,
-            shortMessage: 'Your detail is safe'
-        }
-        globalMessages[to][from].messages.push(infoMessage);
-        globalMessages[to][from].messageId = globalMessages[to][from].messageId + 1;
-    }
-
-
-    var toMessages = globalMessages[to][from];
-    newMessageId = toMessages.messageId + 1;
-    var tMsg = {
-        id: newMessageId,
-        template: template.TEMPLATE_6,
-        time: time,
-        userSent: false,
-        shortMessage: msg,
-        actMessage: msg
-    }
-    globalMessages[to][from].messages.push(tMsg);
-    globalMessages[to][from].messageId = globalMessages[to][from].messageId + 1;
-
-    //console.log("Message saved in memory :: ", globalMessages[from][to]);
-
+    messageDao.saveMessage([nextMessageForSender, nextMessageForReceiver], false, callback)
 
 }
 

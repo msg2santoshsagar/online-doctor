@@ -340,7 +340,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 
   private scrollToBottom(): void {
-    console.log("Scroll to bottom disabled :: ", this.disableScrollDown);
+    //console.log("Scroll to bottom disabled :: ", this.disableScrollDown);
     if (this.disableScrollDown) {
       return
     }
@@ -402,25 +402,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (userMessage == null || userMessage == undefined || userMessage.trim() == '') {
       return;
     }
-
-
     this.webSocketService.sendMessage({
       task: 'TEXT_MESSAGE',
       from: this.authService.getUsername(),
       to: this.currentActiveDoctorName,
       msg: userMessage
     })
-
-    this.globalMessages[this.currentActiveDoctorName].messages.push({
-      id: this.globalMessages[this.currentActiveDoctorName].messageId + 1,
-      template: 'TEMPLATE_7',
-      time: new Date(),
-      userSent: false,
-      shortMessage: userMessage,
-      actMessage: userMessage
-    });
-    this.globalMessages[this.currentActiveDoctorName].messageId = this.globalMessages[this.currentActiveDoctorName].messageId + 1;
-    this.updateShortMessageAndTime(this.currentActiveDoctorName);
   }
 
   UserTypingMessage() {

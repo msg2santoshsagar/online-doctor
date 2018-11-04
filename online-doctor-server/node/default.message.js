@@ -74,7 +74,7 @@ module.exports = {
         return {
             from: from,
             to: to,
-            template: template.TEMPLATE_7,
+            template: template.TEMPLATE_8,
             createdDate: new Date(),
             shortMessage: "Your payment successfull",
             actMessage: "You paid consultation fee of " + price + " for " + credit + " consultation.",
@@ -87,7 +87,7 @@ module.exports = {
         return {
             from: from,
             to: to,
-            template: template.TEMPLATE_7,
+            template: template.TEMPLATE_8,
             createdDate: new Date(),
             shortMessage: 'Doctor will contact you shortly',
             actMessage: docName + ' will assist you in this matter. we will contact you soon.',
@@ -100,7 +100,7 @@ module.exports = {
         return {
             from: from,
             to: to,
-            template: template.TEMPLATE_8,
+            template: template.TEMPLATE_7,
             createdDate: new Date(),
             shortMessage: message,
             actMessage: message,
@@ -113,7 +113,7 @@ module.exports = {
         return {
             from: from,
             to: to,
-            template: template.TEMPLATE_7,
+            template: template.TEMPLATE_8,
             createdDate: new Date(),
             shortMessage: message,
             actMessage: message,

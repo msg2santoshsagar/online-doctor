@@ -7,9 +7,12 @@ var db;
 MongoClient.connect(environment.dbUrl, {
     useNewUrlParser: true
 }, (err, client) => {
-    if (err) return console.log(err)
+    if (err) {
+        console.log(err);
+        return;
+    }
     db = client.db('online_doctor');
-    //console.log("Connection success");
+    console.log("USER DAO Connection success");
 });
 
 /**

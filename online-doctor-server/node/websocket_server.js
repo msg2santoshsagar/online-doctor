@@ -55,11 +55,17 @@ function handleNewConsultation(identity, messageJson) {
 
 function handleNewMessage(identity, messageJson) {
     console.log("handleNewMessage :: Input :: ", messageJson);
-    messageService.newMessage(messageJson);
-    sendMessage(messageJson.to, {
-        task: 'NEW_MESSAGE_AVAILABLE',
-        from: messageJson.from
+    messageService.newMessage(messageJson, (err, result) => {
+        sendMessage(messageJson.to, {
+            task: 'NEW_MESSAGE_AVAILABLE',
+            from: messageJson.from
+        });
+        sendMessage(messageJson.from, {
+            task: 'NEW_MESSAGE_AVAILABLE',
+            from: messageJson.to
+        });
     });
+
 }
 
 

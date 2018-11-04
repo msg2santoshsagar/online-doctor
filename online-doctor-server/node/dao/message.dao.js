@@ -2,19 +2,21 @@ const MongoClient = require('mongodb').MongoClient
 const tableNames = require('./../table_names');
 const userDetails = require('../user_details');
 const templates = require('../templates');
+const environment = require('./../../environment');
 
 
-var dbUrl = 'mongodb://test:test1234@ds245523.mlab.com:45523/online_doctor';
 
 var db;
 
 /**
  * Connect to database
  */
-MongoClient.connect(dbUrl, {
+MongoClient.connect(environment.dbUrl, {
     useNewUrlParser: true
 }, (err, client) => {
-    if (err) return console.log(err)
+    if (err) {
+        console.log(err)
+    }
     db = client.db('online_doctor');
     //console.log("Connection success");
 });
@@ -100,7 +102,6 @@ function saveMessage(messages, markPreviousMessageAsOld, callback) {
 
     } else {
         saveMessagesToDb(messages, callback);
-
     }
 }
 
@@ -131,11 +132,7 @@ function isMessageAvailable(from, to, callback) {
 function findMessageForUser(userName, callback) {
     db.collection(tableNames.MESSAGES).find({
         to: userName
-    }).toArray(function (err, results) {
-        if (callback !== undefined) {
-            callback(results);
-        }
-    });
+    }).toArray(callback);
 }
 
 function findMessageForUserFromUser(from, to, lastMessageId, callback) {

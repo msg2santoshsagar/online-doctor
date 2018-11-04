@@ -68,39 +68,12 @@ router.post('/consultationPacagePurchased', function (req, res, next) {
                 from: result.docName
             });
             wss.sendMessage(result.docName, {
-                task: 'NEW_MESSAGE_AVAI(LABLE',
+                task: 'NEW_MESSAGE_AVAILABLE',
                 from: userName
             });
         }
         res.send(result);
     })
-
-    /* var body = req.body;
-    var userName = body.user;
-    var record = messageService.consultationPackagePurchased(body);
-    var reqBody = {
-        id: body.message.id,
-        answer: 'paid'
-    };
-    var messages = messageService.answerSelected(userName, reqBody);
-
-    wss.sendMessage(userName, {
-        task: 'NEW_MESSAGE_AVAILABLE',
-        from: userDetail.DR_ASSISTANT_NAME
-    });
-    if (messages.docName != undefined) {
-        wss.sendMessage(userName, {
-            task: 'NEW_MESSAGE_AVAILABLE',
-            from: messages.docName
-        });
-        wss.sendMessage(messages.docName, {
-            task: 'NEW_MESSAGE_AVAI(LABLE',
-            from: userName
-        });
-        delete messages.docName;
-    }
-
-    res.send(record); */
 });
 
 
