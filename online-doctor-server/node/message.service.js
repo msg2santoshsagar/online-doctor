@@ -267,6 +267,13 @@ function assignDoctorToUser(userName, doctorType, callback) {
 }
 
 
+/**
+ * When user purchase any consultation package
+ * 
+ * @param {*} userName 
+ * @param {*} reqParam 
+ * @param {*} callback 
+ */
 function consultationPackagePurchased(userName, reqParam, callback) {
 
     var messageId = reqParam.message.id;

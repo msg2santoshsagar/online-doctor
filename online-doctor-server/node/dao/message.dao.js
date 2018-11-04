@@ -132,6 +132,8 @@ function isMessageAvailable(from, to, callback) {
 function findMessageForUser(userName, callback) {
     db.collection(tableNames.MESSAGES).find({
         to: userName
+    }).sort({
+        id: 1
     }).toArray(callback);
 }
 
@@ -143,6 +145,8 @@ function findMessageForUserFromUser(from, to, lastMessageId, callback) {
         id: {
             $gt: lastMessageId
         }
+    }).sort({
+        id: 1
     }).toArray(function (err, results) {
         // console.log("***********************   Result found for message from user to user : ", results);
         if (callback !== undefined) {
