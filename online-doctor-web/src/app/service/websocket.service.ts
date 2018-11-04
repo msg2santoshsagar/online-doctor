@@ -1,5 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { WebSocketSubject } from 'rxjs/observable/dom/WebSocketSubject';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({
@@ -16,7 +17,7 @@ export class WebsocketService {
   connect() {
     console.log("Request to connect to web socket");
     this.socket$ = new WebSocketSubject<any>({
-      url: 'ws://localhost:3000',
+      url: environment.WS_END_POINT,
       deserializer: function (e) {
         return e.data;
       }

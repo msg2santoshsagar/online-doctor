@@ -2,11 +2,14 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-const BASE_URL = "http://localhost:3000";
-//const BASE_URL = "http://192.168.43.15:3000";
+//const BASE_HOST = "localhost";
+const BASE_HOST = "192.168.43.15";
+const BASE_PORT = "3000";
+const BASE_URL = "http://" + BASE_HOST + ":" + BASE_PORT;
 
 export const environment = {
   production: false,
+  WS_END_POINT: "ws://" + BASE_HOST + ":" + BASE_PORT,
   CURRENT_USER_END_POINT: BASE_URL + "/api/users/currentUser",
   USER_DESIGNATION_END_POINT: BASE_URL + "/api/users/designation",
   LOGIN_END_POINT: BASE_URL + "/api/users/login",

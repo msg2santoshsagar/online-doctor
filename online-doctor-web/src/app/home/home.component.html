@@ -75,7 +75,7 @@
             <p class="header-text">{{currentActiveDoctorName}} <span class="text-small-typing" *ngIf="globalMessages[currentActiveDoctorName]?.typing">typing...</span></p>
 
           </div>
-          <div class="col-sm-1 col-md-1 col-1 pull-right">
+          <div class="col-sm-1 col-md-1 col-1 p-0 pull-right">
             <i class="fa fa-ellipsis-v fa-icon" aria-hidden="true"></i>
           </div>
         </div>
@@ -274,11 +274,11 @@
 
         <!-- Reply Box -->
         <div class="row reply" *ngIf="showReplyBox">
-          <div class="col-sm-11 col-xs-11 reply-main">
+          <div class="col-sm-11 col-11 reply-main">
             <textarea class="form-control" rows="1" id="comment" [(ngModel)]="replyMessage" placeholder="Enter your message here"
               (keyup)="UserTypingMessage()" (keyup.enter)="OnSendReply($event)"></textarea>
           </div>
-          <div class="col-sm-1 col-xs-1 reply-send">
+          <div class="col-sm-1 col-1 reply-send">
             <i class="fa fa-send fa-2x" aria-hidden="true" (click)="OnSendReply($event)"></i>
           </div>
         </div>
