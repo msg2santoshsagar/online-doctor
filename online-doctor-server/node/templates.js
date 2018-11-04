@@ -1,4 +1,4 @@
-var template = {
+module.exports = {
 
     TEMPLATE_1: "TEMPLATE_1",
     TEMPLATE_2: "TEMPLATE_2",
@@ -10,5 +10,3 @@ var template = {
     TEMPLATE_8: "TEMPLATE_8",
 
 }
-
-module.exports = template;

@@ -1,5 +1,5 @@
 var express = require('express');
-var userDetail = require('./../node/user-detail');
+var userDetail = require('./../node/user_details');
 var userDao = require('./../node/dao/user.dao');
 var doctorDao = require('./../node/dao/doctor.dao');
 

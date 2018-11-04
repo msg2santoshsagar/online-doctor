@@ -26,6 +26,29 @@ function findDesignation(userName, callback) {
     });
 }
 
+/**
+ * To find random doctor by designation
+ * 
+ * @param {*} docterType 
+ * @param {*} callback 
+ */
+function findRandomDoctorForDesignation(designation, callback) {
+    db.collection(tableNames.DOCTORS).find({
+        designation: designation
+    }).toArray(function (err, results) {
+        if (results.length > 0) {
+
+            var len = results.length;
+            var idx = Math.floor(Math.random() * len);
+            if (idx >= len) {
+                idx = 0;
+            }
+            callback(err, results[idx]);
+        }
+    });
+}
+
 module.exports = {
-    findDesignation: findDesignation
+    findDesignation: findDesignation,
+    findRandomDoctorForDesignation: findRandomDoctorForDesignation
 }

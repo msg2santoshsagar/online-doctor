@@ -1,8 +1,9 @@
-var template = require('./template');
-var userDetail = require('./user-detail');
+var template = require('./templates');
+var userDetail = require('./user_details');
 var messageDao = require('./dao/message.dao');
 var userDao = require('./dao/user.dao');
 var paymentDao = require('./dao/payments.dao');
+var doctorDao = require('./dao/doctor.dao');
 var defaultMessage = require('./default.message');
 
 var globalMessages = {};
@@ -149,6 +150,11 @@ function answerSelected(userName, reqBody, callback) {
                     messageDao.saveMessage([nextMessage], true, callback);
                 } else {
                     console.log("User is already having positive credit, so assign the doctor");
+                    assignDoctorToUser(userName, currentRecord.answer, (err, doctorAssignedResult) => {
+                        console.log("Doctor assigned result found :: ", doctorAssignedResult);
+                        currentRecord.docName = doctorAssignedResult.docName;
+                        callback(err, currentRecord);
+                    })
                 }
             });
 
@@ -501,6 +507,95 @@ function assignDoctorToUser(userName, doctorType, callback) {
     console.log("assignDoctorToUser : userName : ", userName);
     console.log("assignDoctorToUser : doctorType : ", doctorType);
 
+
+    function assignDoctor(userName, doctorType) {
+        console.log("Request to assign doctor for ", userName, " and doctor type : ", doctorType);
+        doctorDao.findRandomDoctorForDesignation(doctorType, (err, docterDetail) => {
+            console.log("Doctor found : ", docterDetail);
+
+            userDao.decreaseConsultationCredit(userName, 1, (err, result) => {
+                console.log("Consultation credit decreased :: ");
+
+
+                messageDao.getLastMessages(userDetail.DR_ASSISTANT_NAME, userName, 8, (err, lastMessagesList) => {
+
+                    // console.log("User last messages found :: ", lastMessagesList);
+
+                    var nextMessage1 = defaultMessage.getDocterWillContactMessage(userDetail.DR_ASSISTANT_NAME, userName, docterDetail.name);
+
+                    var nextMessage2 = defaultMessage.getInformationSafeMessage(docterDetail.name, userName);
+                    var nextMessage3 = defaultMessage.getInformationSafeMessage(userName, docterDetail.name);
+
+                    var messageForUser = 'Hello ' + userName + ", I am " + docterDetail.name + ". Please tell me how may I help you";
+                    var nextMessage4 = defaultMessage.getNormalMessageForRightSide(docterDetail.name, userName, messageForUser);
+
+
+                    var patientDetail = [];
+                    patientDetail[0] = "Hello " + docterDetail.name + ", Please attend the below patient.";
+                    patientDetail[2] = "Name : " + userName;
+                    patientDetail[4] = "**********MESSAGE BY BOT**********";
+                    for (var i = 0; i < lastMessagesList.length; i++) {
+                        var tmpMsg = lastMessagesList[i];
+                        // console.log("TEMPLATE : ", tmpMsg.template);
+                        if (tmpMsg.template == template.TEMPLATE_4) {
+                            patientDetail[3] = "Symptomps : " + tmpMsg.answer;
+                        }
+                        if (tmpMsg.template == template.TEMPLATE_3) {
+                            patientDetail[2] = "For : " + tmpMsg.answer;
+                        }
+                        if (tmpMsg.template == template.TEMPLATE_2) {
+                            patientDetail[1] = "For : " + tmpMsg.answer;
+                            break;
+                        }
+                    }
+
+                    patientDetail = patientDetail.join("\n");
+
+                    var nextMessage5 = defaultMessage.getNormalMessageForRightSide(userName, docterDetail.name, patientDetail);
+
+                    //console.log("Message 5 : ", nextMessage5);
+
+                    messageDao.isMessageAvailable(docterDetail.name, userName, (msgAvailable) => {
+                        console.log("Message Available :: ", msgAvailable);
+                        var mlist = [];
+                        mlist.push(nextMessage1);
+                        if (!msgAvailable) {
+                            mlist.push(nextMessage2);
+                            mlist.push(nextMessage3);
+                        }
+                        mlist.push(nextMessage4);
+                        mlist.push(nextMessage5);
+
+                        //console.log("Message list prepared :: ", mlist);
+
+                        messageDao.saveMessage(mlist, true, (err, saveMessageResult) => {
+                            console.log("Result saved :: ");
+                            var resultData = {
+                                doctorAssigned: true,
+                                docName: docterDetail.name
+                            }
+                            callback(err, resultData);
+                        })
+
+                    })
+
+
+                });
+
+            });
+        });
+    }
+
+    if (doctorType == null) {
+        messageDao.findDoctoryType(userName, (err, result) => {
+            assignDoctor(userName, result);
+        });
+    } else {
+        assignDoctor(userName, doctorType);
+    }
+
+
+
 }
 
 
@@ -536,13 +631,12 @@ function consultationPackagePurchased(userName, reqParam, callback) {
 
 }
 
-
-
 module.exports = {
     getMessagesForUser: getMessagesForUser,
     getMessageForUserByDoctor: getMessageForUserByDoctor,
     answerSelected: answerSelected,
     newMessage: newMessage,
     newConsultationForUser: newConsultationForUser,
-    consultationPackagePurchased: consultationPackagePurchased
+    consultationPackagePurchased: consultationPackagePurchased,
+    assignDoctorToUser: assignDoctorToUser
 }

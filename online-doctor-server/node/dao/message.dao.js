@@ -1,5 +1,7 @@
 const MongoClient = require('mongodb').MongoClient
 const tableNames = require('./../table_names');
+const userDetails = require('../user_details');
+const templates = require('../templates');
 
 
 var dbUrl = 'mongodb://test:test1234@ds245523.mlab.com:45523/online_doctor';
@@ -61,11 +63,7 @@ function saveMessagesToDb(messages, callback) {
 
     getValueForNextSequence(tableNames.MESSAGES, messages.length, function (err, result) {
         if (!err) {
-            db.collection(tableNames.MESSAGES).insertMany(setIdentifier(messages, result), function (err, result) {
-                if (callback !== undefined) {
-                    callback(err, result);
-                }
-            })
+            db.collection(tableNames.MESSAGES).insertMany(setIdentifier(messages, result), callback);
         }
     });
 }
@@ -178,10 +176,49 @@ function updateAnswer(messageId, answer, callback) {
     }, callback);
 }
 
+
+function findDoctoryType(userName, callback) {
+    console.log("Request to find doctor type for user : ", userName);
+    db.collection(tableNames.MESSAGES).find({
+        from: userDetails.DR_ASSISTANT_NAME,
+        to: userName,
+        template: templates.TEMPLATE_5
+    }).sort({
+        id: -1
+    }).limit(1).toArray((err, results) => {
+        if (results.length > 0) {
+            callback(err, results[0].answer);
+        }
+    });
+}
+
+/**
+ * To get last messages
+ * 
+ * @param {*} from 
+ * @param {*} userName 
+ * @param {*} lmt 
+ * @param {*} callback 
+ */
+function getLastMessages(from, userName, lmt, callback) {
+    db.collection(tableNames.MESSAGES).find({
+        from: from,
+        to: userName
+    }).sort({
+        id: -1
+    }).limit(lmt).toArray((err, results) => {
+        callback(err, results);
+    });
+}
+
+
+
 module.exports = {
     saveMessage: saveMessage,
     isMessageAvailable: isMessageAvailable,
     findMessageForUser: findMessageForUser,
     findMessageForUserFromUser: findMessageForUserFromUser,
-    updateAnswer: updateAnswer
+    updateAnswer: updateAnswer,
+    findDoctoryType: findDoctoryType,
+    getLastMessages: getLastMessages
 }

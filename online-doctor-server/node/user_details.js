@@ -1,4 +1,4 @@
-var userDetail = {
+module.exports = {
 
     DR_ASSISTANT_NAME: "Dr. Assistant",
     Doctors: [{
@@ -29,6 +29,4 @@ var userDetail = {
         }
     ]
 
-}
-
-module.exports = userDetail;
+};

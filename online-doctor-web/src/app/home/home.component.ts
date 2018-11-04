@@ -386,7 +386,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     this.currentActiveDoctorName = doctor.name;
-    this.currentActiveMessageList = this.globalMessages[doctor.name].messages;
+    this.currentActiveMessageList = this.globalMessages[doctor.name].messageList;
     this.showReplyBox = false;
     if (this.currentActiveDoctorName != this.DR_ASSISTANT_NAME) {
       this.showReplyBox = true;

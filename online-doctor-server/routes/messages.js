@@ -1,7 +1,7 @@
 var express = require('express');
 var wss = require('./../node/websocket_server');
 var messageService = require('../node/message.service');
-var userDetail = require('./../node/user-detail');
+var userDetail = require('./../node/user_details');
 
 var router = express.Router();
 
@@ -40,7 +40,7 @@ router.post('/answerSelected', function (req, res, next) {
                 task: 'NEW_MESSAGE_AVAILABLE',
                 from: result.docName
             });
-            wss.sendMessage(messages.docName, {
+            wss.sendMessage(result.docName, {
                 task: 'NEW_MESSAGE_AVAILABLE',
                 from: userName
             });
@@ -58,6 +58,21 @@ router.post('/consultationPacagePurchased', function (req, res, next) {
 
     messageService.consultationPackagePurchased(userName, reqBody, (err, result) => {
         console.log("Consultation package purchase successfull with : ", result);
+        wss.sendMessage(userName, {
+            task: 'NEW_MESSAGE_AVAILABLE',
+            from: userDetail.DR_ASSISTANT_NAME
+        });
+        if (result.docName != undefined) {
+            wss.sendMessage(userName, {
+                task: 'NEW_MESSAGE_AVAILABLE',
+                from: result.docName
+            });
+            wss.sendMessage(result.docName, {
+                task: 'NEW_MESSAGE_AVAI(LABLE',
+                from: userName
+            });
+        }
+        res.send(result);
     })
 
     /* var body = req.body;

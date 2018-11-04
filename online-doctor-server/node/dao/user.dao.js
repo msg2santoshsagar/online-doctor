@@ -71,9 +71,30 @@ function increaseConsultationCredit(userName, credit, callback) {
     }, callback);
 }
 
+/**
+ * To decrease the consultation credit for the user
+ * 
+ * @param {*} userName 
+ * @param {*} credit 
+ * @param {*} callback 
+ */
+function decreaseConsultationCredit(userName, credit, callback) {
+    //console.log("Request to increase consultation credit : ", userName, credit);
+    db.collection(tableNames.USERS).findOneAndUpdate({
+        userName: userName
+    }, {
+        $inc: {
+            consultationCredit: (0 - credit)
+        }
+    }, {
+        returnOriginal: false
+    }, callback);
+}
+
 
 module.exports = {
     createUserEntry: createUserEntry,
     findConsultationCredit: findConsultationCredit,
-    increaseConsultationCredit: increaseConsultationCredit
+    increaseConsultationCredit: increaseConsultationCredit,
+    decreaseConsultationCredit: decreaseConsultationCredit
 }

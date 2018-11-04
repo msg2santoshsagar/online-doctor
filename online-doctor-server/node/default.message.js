@@ -1,4 +1,4 @@
-const template = require('./template');
+const template = require('./templates');
 
 module.exports = {
 
@@ -78,6 +78,45 @@ module.exports = {
             createdDate: new Date(),
             shortMessage: "Your payment successfull",
             actMessage: "You paid consultation fee of " + price + " for " + credit + " consultation.",
+            oldMessage: false
+        };
+    },
+
+
+    getDocterWillContactMessage: function (from, to, docName) {
+        return {
+            from: from,
+            to: to,
+            template: template.TEMPLATE_7,
+            createdDate: new Date(),
+            shortMessage: 'Doctor will contact you shortly',
+            actMessage: docName + ' will assist you in this matter. we will contact you soon.',
+            oldMessage: false
+        };
+    },
+
+
+    getNormalMessageForLeftSide: function (from, to, message) {
+        return {
+            from: from,
+            to: to,
+            template: template.TEMPLATE_8,
+            createdDate: new Date(),
+            shortMessage: message,
+            actMessage: message,
+            oldMessage: false
+        };
+    },
+
+
+    getNormalMessageForRightSide: function (from, to, message) {
+        return {
+            from: from,
+            to: to,
+            template: template.TEMPLATE_7,
+            createdDate: new Date(),
+            shortMessage: message,
+            actMessage: message,
             oldMessage: false
         };
     },

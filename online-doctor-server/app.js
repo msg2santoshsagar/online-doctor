@@ -74,7 +74,7 @@ app.use(function (req, res, next) {
     '/api/users/currentUser': true,
     '/api/users/logout': true,
   };
-  if (unauthenticated_path_list[req.originalUrl] != undefined) {
+  if (!req.originalUrl.startsWith('/api') || unauthenticated_path_list[req.originalUrl] != undefined) {
     //These all api don't need authentication;
     next();
   } else {

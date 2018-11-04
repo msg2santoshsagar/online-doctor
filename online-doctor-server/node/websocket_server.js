@@ -1,6 +1,6 @@
 var WebSocket = require('ws');
 var messageService = require('./message.service');
-var userDetail = require('./user-detail');
+var userDetail = require('./user_details');
 var environment = require('./../environment');
 
 
