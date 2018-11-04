@@ -31,6 +31,7 @@ import { OrderByPipe } from './pipes/order-by.pipe';
   ],
   providers: [
     CustomHttpInterceptor,
+    OrderByPipe,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: CustomHttpInterceptor,

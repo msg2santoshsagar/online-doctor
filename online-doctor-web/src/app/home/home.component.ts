@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { WebsocketService } from '../service/websocket.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { OrderByPipe } from '../pipes/order-by.pipe';
 
 declare let paypal: any;
 
@@ -117,7 +118,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   };
 
 
-  constructor(private router: Router, private authService: AuthService, private webSocketService: WebsocketService, private http: HttpClient) {
+  constructor(private router: Router, private authService: AuthService, private webSocketService: WebsocketService, private http: HttpClient, private orderByPipe: OrderByPipe) {
     this.authService.validateLogin();
   }
 
@@ -222,6 +223,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
 
     }
+
+    this.doctorList = this.orderByPipe.transform(this.doctorList, 'time', false);
   }
 
   setUserTypingMessage(user) {
@@ -294,10 +297,17 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
       localDoctorList.push(doctorDetail);
     }
-    this.doctorList = localDoctorList;
+    this.doctorList = this.orderByPipe.transform(localDoctorList, 'time', false);
     if (this.doctorList.length > 0) {
-      this.currentActiveDoctorName = this.doctorList[0].name;
+      var activeUserNameFromLocalStorage = localStorage.getItem('ACTIVE_USER');
+      if (activeUserNameFromLocalStorage == null) {
+        this.currentActiveDoctorName = this.doctorList[0].name;
+        localStorage.setItem('ACTIVE_USER', this.currentActiveDoctorName);
+      } else {
+        this.currentActiveDoctorName = activeUserNameFromLocalStorage;
+      }
       this.currentActiveMessageList = this.globalMessages[this.currentActiveDoctorName].messageList;
+
     }
     console.log("Current active doctor name :: ", this.currentActiveDoctorName);
     if (this.currentActiveDoctorName != this.defaultDocterName && this.currentActiveDoctorName != this.DR_ASSISTANT_NAME) {
@@ -386,6 +396,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       return;
     }
     this.currentActiveDoctorName = doctor.name;
+    localStorage.setItem('ACTIVE_USER', this.currentActiveDoctorName);
     this.currentActiveMessageList = this.globalMessages[doctor.name].messageList;
     this.showReplyBox = false;
     if (this.currentActiveDoctorName != this.DR_ASSISTANT_NAME) {
