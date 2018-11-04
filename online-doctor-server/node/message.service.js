@@ -42,7 +42,7 @@ function formatMessage(messageParam) {
 function getMessagesForUser(userName, callback) {
     messageDao.findMessageForUser(userName, (err, result) => {
         if (err) {
-            console.log("Error occured in fetching message for user : ", user, " and error is \n", err);
+            console.log("Error occured in fetching message for user : ", userName, " and error is \n", err);
         }
         callback(formatMessage(result));
     });

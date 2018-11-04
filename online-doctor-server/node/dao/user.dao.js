@@ -12,7 +12,7 @@ MongoClient.connect(environment.dbUrl, {
         return;
     }
     db = client.db('online_doctor');
-    console.log("USER DAO Connection success");
+    // console.log("USER DAO Connection success");
 });
 
 /**
@@ -35,6 +35,19 @@ function createUserEntry(userName) {
                 userName: userName,
                 consultationCredit: 0,
                 createdDate: new Date()
+            });
+        } else {
+            var lastLoginTime = results[0].lastLoginTime;
+            if (lastLoginTime == undefined) {
+                lastLoginTime = new Date();
+            }
+            db.collection(tableNames.USERS).findOneAndUpdate({
+                userName: userName
+            }, {
+                $set: {
+                    lastLoginTime: lastLoginTime,
+                    currentLogin: new Date()
+                }
             });
         }
     });
